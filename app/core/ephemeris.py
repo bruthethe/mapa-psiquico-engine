@@ -133,15 +133,7 @@ def sunrise(dt: datetime, lat: float, lon: float) -> datetime:
     """
     _init()
     jd = _julian_day(dt.replace(hour=0, minute=0, second=0, microsecond=0))
-    _, tret = swe.rise_trans(
-        jd,
-        swe.SUN,
-        swe.FLG_SWIEPH,
-        swe.CALC_RISE,
-        lon,
-        lat,
-        0.0,
-    )
+    _, tret = swe.rise_trans(jd, swe.SUN, geopos=(lon, lat, 0.0), rsmi=swe.CALC_RISE)
     return _jd_to_datetime(tret[0])
 
 
@@ -152,13 +144,5 @@ def sunset(dt: datetime, lat: float, lon: float) -> datetime:
     """
     _init()
     jd = _julian_day(dt.replace(hour=0, minute=0, second=0, microsecond=0))
-    _, tret = swe.rise_trans(
-        jd,
-        swe.SUN,
-        swe.FLG_SWIEPH,
-        swe.CALC_SET,
-        lon,
-        lat,
-        0.0,
-    )
+    _, tret = swe.rise_trans(jd, swe.SUN, geopos=(lon, lat, 0.0), rsmi=swe.CALC_SET)
     return _jd_to_datetime(tret[0])
