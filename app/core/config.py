@@ -3,7 +3,10 @@ from pathlib import Path
 
 
 def data_path() -> Path:
-    """Resolve o caminho base para a pasta data/ via DATA_PATH (env var) ou convenção do monorepo."""
+    """Resolve o caminho base para a pasta data/.
+
+    Usa DATA_PATH (env var) ou convenção do monorepo como fallback.
+    """
     env = os.getenv("DATA_PATH")
     if env:
         return Path(env)

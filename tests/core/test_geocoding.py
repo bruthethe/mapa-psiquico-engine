@@ -2,13 +2,17 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from app.core.geocoding import GeoLocation, GeocodingError, geocode
+from app.core.geocoding import GeocodingError, GeoLocation, geocode
 
 # Resposta simulada do Nominatim para São Paulo
-_SP_RESPONSE = [{"lat": "-23.5505", "lon": "-46.6333", "display_name": "São Paulo, SP, Brasil"}]
+_SP_RESPONSE = [
+    {"lat": "-23.5505", "lon": "-46.6333", "display_name": "São Paulo, SP, Brasil"}
+]
 
 # Resposta simulada para Londres (fuso diferente — valida timezone)
-_LDN_RESPONSE = [{"lat": "51.5074", "lon": "-0.1278", "display_name": "London, England"}]
+_LDN_RESPONSE = [
+    {"lat": "51.5074", "lon": "-0.1278", "display_name": "London, England"}
+]
 
 
 def _mock_get(response_data: list) -> MagicMock:

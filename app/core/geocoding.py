@@ -39,7 +39,8 @@ def geocode(city: str, state: str = "", country: str = "") -> GeoLocation:
     múltiplas requisições HTTP durante a vida do processo.
 
     Raises:
-        GeocodingError: se a cidade não for encontrada ou o timezone não puder ser resolvido.
+        GeocodingError: se a cidade não for encontrada ou o timezone
+            não puder ser resolvido.
         httpx.HTTPError: se a API do Nominatim estiver indisponível.
     """
     query = ", ".join(filter(None, [city, state, country]))

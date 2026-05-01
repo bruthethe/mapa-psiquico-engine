@@ -20,34 +20,46 @@ _sid_lock = threading.Lock()
 
 # ── Planetas ───────────────────────────────────────────────────────────────────
 
+
 class Planet(IntEnum):
-    SUN     = swe.SUN
-    MOON    = swe.MOON
+    SUN = swe.SUN
+    MOON = swe.MOON
     MERCURY = swe.MERCURY
-    VENUS   = swe.VENUS
-    MARS    = swe.MARS
+    VENUS = swe.VENUS
+    MARS = swe.MARS
     JUPITER = swe.JUPITER
-    SATURN  = swe.SATURN
-    URANUS  = swe.URANUS
+    SATURN = swe.SATURN
+    URANUS = swe.URANUS
     NEPTUNE = swe.NEPTUNE
-    PLUTO   = swe.PLUTO
+    PLUTO = swe.PLUTO
 
 
 SIGN_NAMES: list[str] = [
-    "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
-    "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces",
+    "Aries",
+    "Taurus",
+    "Gemini",
+    "Cancer",
+    "Leo",
+    "Virgo",
+    "Libra",
+    "Scorpio",
+    "Sagittarius",
+    "Capricorn",
+    "Aquarius",
+    "Pisces",
 ]
 
 
 @dataclass(frozen=True)
 class PlanetPosition:
     planet: Planet
-    longitude: float       # 0–360 graus eclípticos
-    sign_index: int        # 0=Áries … 11=Peixes
+    longitude: float  # 0–360 graus eclípticos
+    sign_index: int  # 0=Áries … 11=Peixes
     degree_in_sign: float  # 0–30
 
 
 # ── Helpers internos ───────────────────────────────────────────────────────────
+
 
 def _init() -> None:
     swe.set_ephe_path(str(ephemeris_path()))
@@ -78,6 +90,7 @@ def _make_position(planet: Planet, lon: float) -> PlanetPosition:
 
 
 # ── API pública ────────────────────────────────────────────────────────────────
+
 
 def tropical_longitude(planet: Planet, dt: datetime) -> PlanetPosition:
     """Longitude eclíptica de um planeta no zodíaco tropical."""
@@ -121,8 +134,14 @@ def sunrise(dt: datetime, lat: float, lon: float) -> datetime:
     _init()
     jd = _julian_day(dt.replace(hour=0, minute=0, second=0, microsecond=0))
     _, tret = swe.rise_trans(
-        jd, swe.SUN, b"", swe.FLG_SWIEPH, swe.CALC_RISE,
-        (lon, lat, 0), 1013.25, 15.0,
+        jd,
+        swe.SUN,
+        b"",
+        swe.FLG_SWIEPH,
+        swe.CALC_RISE,
+        (lon, lat, 0),
+        1013.25,
+        15.0,
     )
     return _jd_to_datetime(tret[0])
 
@@ -135,7 +154,13 @@ def sunset(dt: datetime, lat: float, lon: float) -> datetime:
     _init()
     jd = _julian_day(dt.replace(hour=0, minute=0, second=0, microsecond=0))
     _, tret = swe.rise_trans(
-        jd, swe.SUN, b"", swe.FLG_SWIEPH, swe.CALC_SET,
-        (lon, lat, 0), 1013.25, 15.0,
+        jd,
+        swe.SUN,
+        b"",
+        swe.FLG_SWIEPH,
+        swe.CALC_SET,
+        (lon, lat, 0),
+        1013.25,
+        15.0,
     )
     return _jd_to_datetime(tret[0])

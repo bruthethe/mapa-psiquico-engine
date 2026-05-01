@@ -3,11 +3,10 @@ from datetime import datetime, time
 import pytest
 
 from app.core.temporal import (
-    local_to_utc,
     TemporalStatus,
-    TimeInput,
     TimeInputType,
     TimeWindow,
+    local_to_utc,
     parse_time_input,
     resolve_status,
 )
@@ -34,15 +33,20 @@ class TestParseExact:
 
 
 class TestParseWindow:
-    @pytest.mark.parametrize("window, expected_a, expected_b", [
-        (TimeWindow.MADRUGADA,   time(0, 0),  time(3, 59)),
-        (TimeWindow.MANHA_CEDO,  time(4, 0),  time(7, 59)),
-        (TimeWindow.MANHA,       time(8, 0),  time(11, 59)),
-        (TimeWindow.TARDE,       time(12, 0), time(15, 59)),
-        (TimeWindow.FINAL_TARDE, time(16, 0), time(19, 59)),
-        (TimeWindow.NOITE,       time(20, 0), time(23, 59)),
-    ])
-    def test_window_bounds(self, window: TimeWindow, expected_a: time, expected_b: time) -> None:
+    @pytest.mark.parametrize(
+        "window, expected_a, expected_b",
+        [
+            (TimeWindow.MADRUGADA, time(0, 0), time(3, 59)),
+            (TimeWindow.MANHA_CEDO, time(4, 0), time(7, 59)),
+            (TimeWindow.MANHA, time(8, 0), time(11, 59)),
+            (TimeWindow.TARDE, time(12, 0), time(15, 59)),
+            (TimeWindow.FINAL_TARDE, time(16, 0), time(19, 59)),
+            (TimeWindow.NOITE, time(20, 0), time(23, 59)),
+        ],
+    )
+    def test_window_bounds(
+        self, window: TimeWindow, expected_a: time, expected_b: time
+    ) -> None:
         result = parse_time_input(window=window)
         assert result.type == TimeInputType.WINDOW
         assert result.point_a == expected_a

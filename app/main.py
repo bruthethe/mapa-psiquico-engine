@@ -3,7 +3,7 @@ from fastapi import FastAPI
 app = FastAPI(
     title="Mapa Psíquico API",
     version="0.1.0",
-    description="Motor de cálculo arquetípico — converte nome + data/hora/local em IDs (1–33).",
+    description="Motor de cálculo arquetípico — converte nome + nascimento em IDs.",
 )
 
 

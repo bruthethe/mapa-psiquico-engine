@@ -14,9 +14,11 @@ from datetime import datetime
 import pytest
 
 # Pula toda a suite se pyswisseph não estiver disponível
-swe = pytest.importorskip("swisseph", reason="pyswisseph não instalado — rode via Docker")
+swe = pytest.importorskip(
+    "swisseph", reason="pyswisseph não instalado — rode via Docker"
+)
 
-from app.core.ephemeris import (
+from app.core.ephemeris import (  # noqa: E402
     Planet,
     PlanetPosition,
     ascendant,
@@ -43,22 +45,30 @@ class TestTropicalLongitude:
     def test_sun_at_vernal_equinox_is_aries(self) -> None:
         dt = datetime(2000, 3, 20, 7, 35)
         pos = tropical_longitude(Planet.SUN, dt)
-        assert pos.sign_index == 0, f"Esperado Áries (0), obtido {pos.sign_index} ({pos.longitude:.2f}°)"
+        assert pos.sign_index == 0, (
+            f"Esperado Áries (0), obtido {pos.sign_index} ({pos.longitude:.2f}°)"
+        )
 
     def test_sun_at_summer_solstice_is_cancer(self) -> None:
         dt = datetime(2000, 6, 21, 1, 48)
         pos = tropical_longitude(Planet.SUN, dt)
-        assert pos.sign_index == 3, f"Esperado Câncer (3), obtido {pos.sign_index} ({pos.longitude:.2f}°)"
+        assert pos.sign_index == 3, (
+            f"Esperado Câncer (3), obtido {pos.sign_index} ({pos.longitude:.2f}°)"
+        )
 
     def test_sun_at_autumn_equinox_is_libra(self) -> None:
         dt = datetime(2000, 9, 22, 17, 28)
         pos = tropical_longitude(Planet.SUN, dt)
-        assert pos.sign_index == 6, f"Esperado Libra (6), obtido {pos.sign_index} ({pos.longitude:.2f}°)"
+        assert pos.sign_index == 6, (
+            f"Esperado Libra (6), obtido {pos.sign_index} ({pos.longitude:.2f}°)"
+        )
 
     def test_sun_at_winter_solstice_is_capricorn(self) -> None:
         dt = datetime(2000, 12, 21, 13, 38)
         pos = tropical_longitude(Planet.SUN, dt)
-        assert pos.sign_index == 9, f"Esperado Capricórnio (9), obtido {pos.sign_index} ({pos.longitude:.2f}°)"
+        assert pos.sign_index == 9, (
+            f"Esperado Capricórnio (9), obtido {pos.sign_index} ({pos.longitude:.2f}°)"
+        )
 
     def test_longitude_range_is_valid(self) -> None:
         dt = datetime(2000, 1, 1, 12, 0)
