@@ -73,11 +73,8 @@ def _julian_day(dt: datetime) -> float:
 
 def _jd_to_datetime(jd: float) -> datetime:
     """Converte Julian Day Number em datetime UTC."""
-    y, m, d, h = swe.jdut1_to_utc(jd, swe.GREG_CAL)
-    hour = int(h)
-    minute = int((h - hour) * 60)
-    second = int(round(((h - hour) * 60 - minute) * 60))
-    return datetime(y, m, d, hour, minute, min(second, 59))
+    y, m, d, hour, minute, second = swe.jdut1_to_utc(jd, swe.GREG_CAL)
+    return datetime(y, m, d, hour, minute, min(int(second), 59))
 
 
 def _make_position(planet: Planet, lon: float) -> PlanetPosition:
