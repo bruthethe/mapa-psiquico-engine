@@ -43,7 +43,9 @@ pytestmark = pytest.mark.integration
 
 class TestTropicalLongitude:
     def test_sun_at_vernal_equinox_is_aries(self) -> None:
-        dt = datetime(2000, 3, 20, 7, 35)
+        # 21/03 ao meio-dia — 1 dia após o equinócio (07:35 UTC 20/03/2000),
+        # Sol claramente dentro de Áries e longe da cúspide com Peixes.
+        dt = datetime(2000, 3, 21, 12, 0)
         pos = tropical_longitude(Planet.SUN, dt)
         assert pos.sign_index == 0, (
             f"Esperado Áries (0), obtido {pos.sign_index} ({pos.longitude:.2f}°)"
