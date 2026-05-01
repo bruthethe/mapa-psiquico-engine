@@ -136,7 +136,6 @@ def sunrise(dt: datetime, lat: float, lon: float) -> datetime:
     _, tret = swe.rise_trans(
         jd,
         swe.SUN,
-        "",
         swe.FLG_SWIEPH,
         swe.CALC_RISE,
         (lon, lat, 0),
@@ -156,7 +155,6 @@ def sunset(dt: datetime, lat: float, lon: float) -> datetime:
     _, tret = swe.rise_trans(
         jd,
         swe.SUN,
-        "",
         swe.FLG_SWIEPH,
         swe.CALC_SET,
         (lon, lat, 0),
