@@ -138,9 +138,9 @@ def sunrise(dt: datetime, lat: float, lon: float) -> datetime:
         swe.SUN,
         swe.FLG_SWIEPH,
         swe.CALC_RISE,
-        (lon, lat, 0),
-        1013.25,
-        15.0,
+        lon,
+        lat,
+        0.0,
     )
     return _jd_to_datetime(tret[0])
 
@@ -157,8 +157,8 @@ def sunset(dt: datetime, lat: float, lon: float) -> datetime:
         swe.SUN,
         swe.FLG_SWIEPH,
         swe.CALC_SET,
-        (lon, lat, 0),
-        1013.25,
-        15.0,
+        lon,
+        lat,
+        0.0,
     )
     return _jd_to_datetime(tret[0])
