@@ -18,4 +18,4 @@ O produto completo (incluindo dados proprietários de arquétipos, traduções e
 
 - Python 3.12 + FastAPI
 - [pyswisseph](https://pypi.org/project/pyswisseph/) — binding Python para o Swiss Ephemeris
-- Swiss Ephemeris data files (`.se1`) — arquivos de efemérida incluídos em `../data/ephemeris/`
+- Swiss Ephemeris data files (`.se1`) — arquivos de efemérida do [Swiss Ephemeris](https://www.astro.com/swisseph/)
