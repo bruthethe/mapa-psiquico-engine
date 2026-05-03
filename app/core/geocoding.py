@@ -14,7 +14,7 @@ import httpx
 from timezonefinder import TimezoneFinder
 
 _NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
-_USER_AGENT = os.getenv("NOMINATIM_USER_AGENT", "MapaPsiquico/0.1")
+_USER_AGENT = os.getenv("NOMINATIM_USER_AGENT", "EsotericEngine/0.1")
 _TF = TimezoneFinder()
 
 

@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 
 app = FastAPI(
-    title="Mapa Psíquico API",
+    title="Esoteric Calculation Engine API",
     version="0.1.0",
-    description="Motor de cálculo arquetípico — converte nome + nascimento em IDs.",
+    description="Astronomical and esoteric calculation engine.",
 )
 
 

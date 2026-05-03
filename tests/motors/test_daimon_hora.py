@@ -1,5 +1,5 @@
 """
-Testes do motor Daimon da Hora — História 2.6.
+Testes do motor Daimon da Hora.
 
 Unitários: sequência caldeia, mapeamento de dia da semana (sem pyswisseph).
 Integração: 5 nascimentos com regente esperado + testes de status temporal.

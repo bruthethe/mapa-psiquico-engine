@@ -1,9 +1,8 @@
 """
-Motor Tropical — Épica 2, História 2.1.
+Motor Tropical.
 
-Converte data/hora/local de nascimento em IDs arquetípicos via posições
-planetárias no zodíaco tropical. Implementa o protocolo temporal completo
-(Caminhos A/B/C) para Sol, Lua, Ascendente e todos os 10 planetas.
+Converte data/hora/local de nascimento em IDs via posições
+planetárias no zodíaco tropical.
 """
 
 from __future__ import annotations
@@ -57,10 +56,10 @@ def _sign_to_id(sign_key: str) -> int:
 class PlanetResult:
     planet: str           # chave PT: "sol", "lua", "marte", etc.
     sign: str             # chave PT do signo em point_a
-    id_gatilho: int       # ID após lookup_id() — nunca retorna 8
+    id_gatilho: int
     status: TemporalStatus
-    sign_b: str | None = None         # apenas quando Status HYBRID
-    id_gatilho_b: int | None = None   # apenas quando Status HYBRID
+    sign_b: str | None = None
+    id_gatilho_b: int | None = None
 
 
 @dataclass
@@ -69,8 +68,8 @@ class TropicalResult:
     lua: PlanetResult
     ascendente: PlanetResult | None   # None se hora desconhecida ou sem localização
     planets: list[PlanetResult]       # 10 planetas (inclui sol e lua)
-    vote: int             # id_gatilho do Sol → vota no ID Dominante
-    vote_b: int | None    # apenas quando Status HYBRID no Sol
+    vote: int
+    vote_b: int | None
     overall_status: TemporalStatus
 
 
@@ -136,17 +135,17 @@ def calculate_tropical(
     lon: float | None = None,
 ) -> TropicalResult:
     """
-    Calcula posições planetárias tropicais e converte em IDs arquetípicos.
+    Calcula posições planetárias tropicais e converte em IDs.
 
     Args:
         birth_date: data de nascimento (horário local)
-        time_input: caminho temporal (exato/janela/desconhecido) — pontos A e B em hora local
+        time_input: modo temporal — hora de nascimento
         tz_name:    fuso IANA do local de nascimento (ex: "Europe/London")
         lat:        latitude — necessária para calcular Ascendente
         lon:        longitude — necessária para calcular Ascendente
 
     Returns:
-        TropicalResult com todos os planetas, Ascendente opcional e voto no ID Dominante.
+        TropicalResult com todos os planetas e Ascendente opcional.
     """
     dt_a = local_to_utc(datetime.combine(birth_date, time_input.point_a), tz_name)
     dt_b = local_to_utc(datetime.combine(birth_date, time_input.point_b), tz_name)

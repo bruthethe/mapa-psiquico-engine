@@ -5,9 +5,9 @@ from enum import Enum, StrEnum
 
 
 class TimeInputType(StrEnum):
-    EXACT = "exact"  # Caminho A — hora e minuto exatos
-    WINDOW = "window"  # Caminho B — janela de 4 horas
-    UNKNOWN = "unknown"  # Caminho C — hora desconhecida (fallback 12:00)
+    EXACT = "exact"
+    WINDOW = "window"
+    UNKNOWN = "unknown"
 
 
 class TimeWindow(StrEnum):
@@ -20,9 +20,9 @@ class TimeWindow(StrEnum):
 
 
 class TemporalStatus(int, Enum):
-    HYBRID = 1  # Frequência em Transição — A ≠ B (cúspide ou conflito de janela)
-    SAFE = 2  # Frequência Definida — janela validada ou fallback sem cúspide
-    EXACT = 3  # Fidelidade Total — hora exata informada
+    HYBRID = 1
+    SAFE = 2
+    EXACT = 3
 
 
 _FALLBACK = time(12, 0)
@@ -40,18 +40,15 @@ _WINDOW_BOUNDS: dict[TimeWindow, tuple[time, time]] = {
 @dataclass(frozen=True)
 class TimeInput:
     type: TimeInputType
-    point_a: time  # Ponto de teste A (início da janela ou hora exata)
-    point_b: time  # Ponto de teste B (fim da janela ou hora exata)
+    point_a: time
+    point_b: time
 
 
 def parse_time_input(
     exact_time: time | None = None,
     window: TimeWindow | None = None,
 ) -> TimeInput:
-    """Classifica o input de hora em um dos 3 caminhos temporais.
-
-    Retorna os pontos de teste A e B para uso nos motores de cálculo.
-    """
+    """Constrói o TimeInput a partir dos parâmetros de hora fornecidos."""
     if exact_time is not None:
         return TimeInput(
             type=TimeInputType.EXACT, point_a=exact_time, point_b=exact_time
@@ -90,7 +87,7 @@ def resolve_status(time_input: TimeInput, id_a: int, id_b: int) -> TemporalStatu
     Determina o status temporal a partir dos IDs produzidos pelos dois pontos de teste.
 
     Chamado por cada motor após calcular id_a (de point_a) e id_b (de point_b).
-    Para Caminho C, cúspide é sinalizada pelo motor passando id_a ≠ id_b.
+    Quando os dois pontos de tempo produzem IDs distintos, retorna HYBRID.
     """
     if time_input.type == TimeInputType.EXACT:
         return TemporalStatus.EXACT

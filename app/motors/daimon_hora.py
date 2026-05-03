@@ -1,5 +1,5 @@
 """
-Motor Daimon da Hora (Horas Planetárias Caldeias) — Épica 2, História 2.6.
+Motor Daimon da Hora (Horas Planetárias Caldeias).
 
 Calcula o regente da hora de nascimento usando o sistema de horas planetárias caldeias.
 O período diurno (nascer → pôr do sol) e noturno (pôr → próximo nascer) são divididos
@@ -35,7 +35,7 @@ _WEEKDAY_START_IDX: list[int] = [6, 2, 5, 1, 4, 0, 3]
 @dataclass(frozen=True)
 class DaimonHoraResult:
     planeta: str           # "Sol", "Lua", "Marte", etc.
-    id_gatilho: int        # ID arquetípico após lookup_id()
+    id_gatilho: int        # ID após lookup_id()
     numero_hora: int       # 1–12 (diurna) ou 13–24 (noturna)
     periodo: str           # "diurno" | "noturno"
     status: TemporalStatus
@@ -126,13 +126,13 @@ def calculate_daimon_hora(
 
     Args:
         birth_date: data de nascimento (horário local)
-        time_input: caminho temporal (exato/janela/desconhecido) — pontos A e B em hora local
+        time_input: modo temporal — hora de nascimento
         tz_name:    fuso IANA do local de nascimento
         lat:        latitude geográfica (positivo = Norte)
         lon:        longitude geográfica (positivo = Leste)
 
     Returns:
-        DaimonHoraMotorResult com regente da hora e voto no ID Dominante.
+        DaimonHoraMotorResult com regente da hora.
     """
     dt_a = local_to_utc(datetime.combine(birth_date, time_input.point_a), tz_name)
     dt_b = local_to_utc(datetime.combine(birth_date, time_input.point_b), tz_name)

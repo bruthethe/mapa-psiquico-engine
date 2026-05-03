@@ -1,5 +1,5 @@
 """
-Motor Védico (Jyotish) — Épica 2, História 2.2.
+Motor Védico (Jyotish).
 
 Calcula Nakshatra lunar, Pada, Atmakaraka e Purushartha a partir da posição
 sidereal da Lua (ayanamsa Lahiri) e dos 7 grahas principais.
@@ -71,9 +71,9 @@ class NakshatraResult:
     deidade: str
     qualidade: str
     status: TemporalStatus
-    nome_b: str | None = None         # apenas quando Status HYBRID
-    id_gatilho_b: int | None = None   # apenas quando Status HYBRID
-    pada_b: int | None = None         # apenas quando Status HYBRID
+    nome_b: str | None = None
+    id_gatilho_b: int | None = None
+    pada_b: int | None = None
 
 
 @dataclass(frozen=True)
@@ -87,8 +87,8 @@ class AtmakarakaResult:
 class VedicaResult:
     nakshatra: NakshatraResult
     atmakaraka: AtmakarakaResult
-    vote: int            # nakshatra.id_gatilho → vota no ID Dominante
-    vote_b: int | None   # apenas quando Status HYBRID
+    vote: int
+    vote_b: int | None
     overall_status: TemporalStatus
 
 
@@ -130,11 +130,11 @@ def calculate_vedica(
 
     Args:
         birth_date: data de nascimento (horário local)
-        time_input: caminho temporal (exato/janela/desconhecido) — pontos A e B em hora local
+        time_input: modo temporal — hora de nascimento
         tz_name:    fuso IANA do local de nascimento
 
     Returns:
-        VedicaResult com Nakshatra (+ Status), Atmakaraka e voto no ID Dominante.
+        VedicaResult com Nakshatra (+ Status) e Atmakaraka.
     """
     dt_a = local_to_utc(datetime.combine(birth_date, time_input.point_a), tz_name)
     dt_b = local_to_utc(datetime.combine(birth_date, time_input.point_b), tz_name)

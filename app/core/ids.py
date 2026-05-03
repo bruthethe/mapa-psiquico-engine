@@ -2,13 +2,13 @@ from dataclasses import dataclass
 
 from app.core.rules import global_rules
 
-# IDs que existem como arquétipos autônomos no sistema
+# IDs válidos do sistema
 VALID_IDS: frozenset[int] = frozenset({1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 22, 33})
 
 # Nunca reduzidos durante cálculos intermediários
 MASTER_NUMBERS: frozenset[int] = frozenset({11, 22, 33})
 
-# IDs que usam dados de outro ID nos Níveis 2 e 3
+# Redirecionamentos de ID
 _LOOKUP_OVERRIDES: dict[int, int] = {8: 4, 22: 4}
 
 
@@ -30,12 +30,7 @@ def theosophic_reduce(n: int) -> int:
 
 
 def lookup_id(id_: int) -> int:
-    """
-    Retorna o ID a usar para consultas nos Níveis 2 e 3.
-
-    Aplica a Regra da Oitava Superior (8→4) e o redirecionamento do 22→4.
-    IDs comuns retornam a si mesmos.
-    """
+    """Retorna o ID a usar para consulta de dados, aplicando redirecionamentos configurados."""
     return _LOOKUP_OVERRIDES.get(id_, id_)
 
 
@@ -50,8 +45,7 @@ def get_master_label(id_: int) -> MasterLabel | None:
     """
     Retorna o label de número mestre para 11, 22 ou 33. None para IDs comuns.
 
-    O label é exibido no início do capítulo antes dos dados do id_dados.
-    """
+"""
     entry = global_rules().get("labels_mestres", {}).get(str(id_))
     if entry is None:
         return None

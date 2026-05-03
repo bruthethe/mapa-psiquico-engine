@@ -1,5 +1,5 @@
 """
-Testes do motor Human Design — História 2.5.
+Testes do motor Human Design.
 
 Unitários: lon_to_gate, lon_to_line, _derive_tipo, _derive_autoridade (sem ephemeris).
 Integração: 5 perfis com verificação de Tipo, Autoridade e Porta do Sol.
@@ -274,7 +274,7 @@ class TestPerfisConhecidos:
         assert result.porta_sol_personalidade == 50
 
     def test_perfil_5_fallback_hora_desconhecida(self):
-        """Caminho C (hora desconhecida) → fallback 12:00 → resultado válido."""
+        """Hora desconhecida → fallback 12:00 → resultado válido."""
         time_input = parse_time_input()
         result = calculate_hd(date(1990, 5, 15), time_input, "UTC")
         self._assert_valid_result(result)

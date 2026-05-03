@@ -1,5 +1,5 @@
 """
-Motor Human Design (HD) — Épica 2, História 2.5.
+Motor Human Design (HD).
 
 Calcula os 13 pontos planetários de Personalidade (nascimento) e Design
 (88,736 dias antes), deriva Centros definidos, Tipo Bioenergético,
@@ -255,7 +255,7 @@ class HDResult:
     autoridade: str
     autoridade_id_gatilho: int
     porta_sol_personalidade: int   # Porta do Sol de Personalidade (1–64)
-    vote: int                      # tipo_id_gatilho → vota no ID Dominante
+    vote: int
     overall_status: TemporalStatus
     tipo_b: str | None = None
     tipo_b_id_gatilho: int | None = None
@@ -296,7 +296,7 @@ def calculate_hd(
 
     Args:
         birth_date: data de nascimento (horário local)
-        time_input: caminho temporal (exato/janela/desconhecido)
+        time_input: modo temporal — hora de nascimento
         tz_name:    fuso IANA do local de nascimento
 
     Returns:

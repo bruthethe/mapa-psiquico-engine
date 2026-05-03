@@ -1,10 +1,8 @@
 """
-Motor Tzolkin Maya (Dreamspell) — Épica 2, História 2.4.
+Motor Tzolkin Maya (Dreamspell).
 
 Calcula Kin, Selo Solar, Tom Lunar e Oráculo da Quinta Força segundo a
 correlação Dreamspell (José Argüelles). Referência: 1987-07-26 = Kin 1.
-
-Tzolkin é puramente baseado na data — sem protocolo temporal.
 """
 
 from __future__ import annotations
@@ -150,8 +148,8 @@ class TzolkinResult:
     selo: TzolkinSelo
     tom: TzolkinTom
     oraculo: TzolkinOraculo
-    vote: int                 # selo.id_gatilho → vota no ID Dominante
-    overall_status: TemporalStatus  # sempre EXACT — Tzolkin é baseado apenas na data
+    vote: int
+    overall_status: TemporalStatus
 
 
 # ── Helpers de construção ──────────────────────────────────────────────────────

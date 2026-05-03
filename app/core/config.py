@@ -3,14 +3,11 @@ from pathlib import Path
 
 
 def data_path() -> Path:
-    """Resolve o caminho base para a pasta data/.
-
-    Usa DATA_PATH (env var) ou convenção do monorepo como fallback.
-    """
+    """Resolve o caminho base para os dados da aplicação."""
     env = os.getenv("DATA_PATH")
-    if env:
-        return Path(env)
-    return Path(__file__).parent.parent.parent.parent / "data"
+    if not env:
+        raise RuntimeError("DATA_PATH environment variable is not set.")
+    return Path(env)
 
 
 def ephemeris_path() -> Path:

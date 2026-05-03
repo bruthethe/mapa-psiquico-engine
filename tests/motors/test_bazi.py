@@ -1,5 +1,5 @@
 """
-Testes do motor Ba Zi — História 2.3.
+Testes do motor Ba Zi.
 
 Unitários: _hour_branch, _calc_hour_stem (sem pyswisseph).
 Integração: 5 nascimentos com Pilares conhecidos + testes de status temporal.
@@ -179,7 +179,7 @@ class TestStructura:
 
 @pytest.mark.integration
 class TestStatusTemporal:
-    def test_caminho_a_exact(self):
+    def test_exact_time(self):
         """Hora exata → hora Status EXACT, hora_b None."""
         time_input = parse_time_input(exact_time=time(14, 30))
         result = calculate_bazi(date(2000, 6, 1), time_input, "UTC")
@@ -189,11 +189,8 @@ class TestStatusTemporal:
         assert result.hora.id_gatilho_b is None
         assert result.overall_status == TemporalStatus.EXACT
 
-    def test_caminho_b_sempre_hybrid(self):
-        """
-        Janela de 4h sempre cobre 2 shi_chen de 2h → Pilar da Hora sempre HYBRID.
-        Comportamento documentado em data-chinese.json (protocolo_temporal_bazi).
-        """
+    def test_window_always_hybrid(self):
+        """Janela de tempo sempre cobre 2 shi_chen → Pilar da Hora sempre HYBRID."""
         for window in TimeWindow:
             time_input = parse_time_input(window=window)
             result = calculate_bazi(date(2000, 6, 1), time_input, "UTC")
@@ -203,9 +200,9 @@ class TestStatusTemporal:
             assert result.hora.id_gatilho_b is not None
             assert result.overall_status == TemporalStatus.HYBRID
 
-    def test_caminho_c_fallback_cavalo(self):
+    def test_unknown_fallback(self):
         """Hora desconhecida → fallback 12:00 → shi_chen do Cavalo (11h–13h) → Status SAFE."""
-        time_input = parse_time_input()  # Caminho C — fallback 12:00
+        time_input = parse_time_input()  # hora desconhecida — fallback 12:00
         result = calculate_bazi(date(2000, 6, 1), time_input, "UTC")
 
         assert result.hora.animal == "cavalo"

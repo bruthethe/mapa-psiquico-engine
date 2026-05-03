@@ -1,5 +1,5 @@
 """
-Testes do motor Védico — História 2.2.
+Testes do motor Védico.
 
 Unitários: nakshatra_index, pada, purushartha (sem pyswisseph).
 Integração: 5 mapas verificados via ephemeris + validação de Atmakaraka.
@@ -188,7 +188,7 @@ class TestStatusTemporal:
             assert result.overall_status == TemporalStatus.SAFE
 
     def test_unknown_fallback_gives_valid_result(self):
-        time_input = parse_time_input()  # Caminho C — fallback 12:00
+        time_input = parse_time_input()  # hora desconhecida — fallback 12:00
         result = calculate_vedica(date(2000, 1, 1), time_input, "UTC")
         assert result.nakshatra.id_gatilho in _VALID_IDS
         assert result.nakshatra.pada in {1, 2, 3, 4}

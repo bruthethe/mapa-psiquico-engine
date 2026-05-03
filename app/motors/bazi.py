@@ -1,8 +1,7 @@
 """
-Motor Ba Zi (Astrologia Chinesa) — Épica 2, História 2.3.
+Motor Ba Zi (Astrologia Chinesa).
 
 Calcula os Quatro Pilares (Ano, Mês, Dia, Hora) e converte em id_gatilho.
-O Pilar do Dia (Dia Mestre) vota no ID Dominante.
 """
 
 from __future__ import annotations
@@ -78,12 +77,12 @@ def _calc_hour_stem(day_stem_idx: int, hour_branch_idx: int) -> int:
 class BaZiPillar:
     animal: str      # "rato", "boi", "tigre", ..., "porco"
     elemento: str    # "madeira", "fogo", "terra", "metal", "agua"
-    id_gatilho: int  # após lookup_id() — nunca retorna 8
+    id_gatilho: int
 
 
 @dataclass(frozen=True)
 class BaZiPilarHora:
-    """Pilar da Hora — híbrido quando Caminho B (janela de 4h sempre cobre 2 shi_chen)."""
+    """Pilar da Hora."""
     animal: str
     elemento: str
     id_gatilho: int
@@ -99,7 +98,7 @@ class BaZiResult:
     mes: BaZiPillar
     dia: BaZiPillar
     hora: BaZiPilarHora
-    vote: int              # dia.id_gatilho → vota no ID Dominante
+    vote: int
     overall_status: TemporalStatus
 
 
@@ -176,15 +175,15 @@ def calculate_bazi(
     tz_name: str,
 ) -> BaZiResult:
     """
-    Calcula os Quatro Pilares Ba Zi e converte em IDs arquetípicos.
+    Calcula os Quatro Pilares Ba Zi e converte em IDs.
 
     Args:
         birth_date: data de nascimento (horário local)
-        time_input: caminho temporal (exato/janela/desconhecido) — pontos A e B em hora local
+        time_input: modo temporal — hora de nascimento
         tz_name:    fuso IANA do local de nascimento
 
     Returns:
-        BaZiResult com os quatro pilares e voto do Pilar do Dia no ID Dominante.
+        BaZiResult com os quatro pilares.
     """
     dt_a = local_to_utc(datetime.combine(birth_date, time_input.point_a), tz_name)
     sun_lon = tropical_longitude(Planet.SUN, dt_a).longitude

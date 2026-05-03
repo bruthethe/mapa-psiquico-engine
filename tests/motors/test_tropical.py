@@ -1,5 +1,5 @@
 """
-Testes do motor Tropical — História 2.1.
+Testes do motor Tropical.
 
 Unitários: sign_keys, sign_to_id (sem pyswisseph).
 Integração: 10 mapas solares verificados + status temporal + Ascendente.
@@ -181,7 +181,7 @@ class TestStatusTemporal:
         assert result.sol.sign_b is None
 
     def test_unknown_time_uses_fallback(self):
-        time_input = parse_time_input()  # Caminho C — fallback 12:00
+        time_input = parse_time_input()  # hora desconhecida — fallback 12:00
         result = calculate_tropical(date(2000, 4, 1), time_input, "UTC")
         # point_a == point_b == 12:00 → Sol Safe (ou Exact se UNKNOWN tratado como SAFE)
         assert result.sol.sign == "aries"
