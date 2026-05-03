@@ -8,11 +8,13 @@ Sem chave de API — respeitar o rate limit de 1 req/s do Nominatim.
 from dataclasses import dataclass
 from functools import lru_cache
 
+import os
+
 import httpx
 from timezonefinder import TimezoneFinder
 
 _NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
-_USER_AGENT = "MapaPsiquico/0.1 (brunothethe@gmail.com)"
+_USER_AGENT = os.getenv("NOMINATIM_USER_AGENT", "MapaPsiquico/0.1")
 _TF = TimezoneFinder()
 
 
