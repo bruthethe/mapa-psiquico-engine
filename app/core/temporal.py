@@ -70,14 +70,14 @@ def local_to_utc(dt: datetime, tz_name: str) -> datetime:
 
     Args:
         dt: datetime local sem timezone (ex: 1990-05-15 14:30)
-        tz_name: nome IANA do fuso (ex: "America/Sao_Paulo"), retornado pelo geocoding
+        tz_name: nome IANA do fuso (ex: "Europe/London"), retornado pelo geocoding
 
     Returns:
         datetime em UTC sem timezone (naive), pronto para o Swiss Ephemeris.
 
     Exemplo:
-        local_to_utc(datetime(1990, 5, 15, 14, 30), "America/Sao_Paulo")
-        → datetime(1990, 5, 15, 17, 30)  # BRT = UTC-3
+        local_to_utc(datetime(1990, 5, 15, 14, 30), "Europe/London")
+        → datetime(1990, 5, 15, 13, 30)  # BST = UTC+1
     """
     tz = zoneinfo.ZoneInfo(tz_name)
     local_aware = dt.replace(tzinfo=tz)

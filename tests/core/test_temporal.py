@@ -97,10 +97,11 @@ class TestResolveStatus:
 
 
 class TestLocalToUtc:
-    def test_sao_paulo_utc_minus_3(self) -> None:
+    def test_london_bst_utc_plus_1(self) -> None:
+        # London em maio = BST (UTC+1): 14:30 local → 13:30 UTC
         local = datetime(1990, 5, 15, 14, 30)
-        result = local_to_utc(local, "America/Sao_Paulo")
-        assert result == datetime(1990, 5, 15, 17, 30)
+        result = local_to_utc(local, "Europe/London")
+        assert result == datetime(1990, 5, 15, 13, 30)
 
     def test_utc_zone_no_offset(self) -> None:
         local = datetime(2000, 1, 1, 12, 0)
@@ -109,14 +110,14 @@ class TestLocalToUtc:
 
     def test_result_is_naive(self) -> None:
         local = datetime(1990, 5, 15, 10, 0)
-        result = local_to_utc(local, "America/Sao_Paulo")
+        result = local_to_utc(local, "Europe/London")
         assert result.tzinfo is None
 
-    def test_dst_transition_sao_paulo_summer(self) -> None:
-        # During Brazilian DST (Nov–Feb), BRT is UTC-2 instead of UTC-3
+    def test_dst_transition_london_winter(self) -> None:
+        # Londres em dezembro = GMT (UTC+0): sem offset
         local = datetime(1990, 12, 15, 14, 30)
-        result = local_to_utc(local, "America/Sao_Paulo")
-        assert result == datetime(1990, 12, 15, 16, 30)
+        result = local_to_utc(local, "Europe/London")
+        assert result == datetime(1990, 12, 15, 14, 30)
 
     def test_new_york_utc_minus_5(self) -> None:
         local = datetime(2024, 3, 1, 8, 0)

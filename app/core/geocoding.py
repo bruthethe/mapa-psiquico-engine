@@ -29,7 +29,7 @@ class GeoLocation:
     country: str
     latitude: float
     longitude: float
-    timezone: str  # ex: "America/Sao_Paulo"
+    timezone: str  # ex: "Europe/London"
 
 
 @lru_cache(maxsize=512)

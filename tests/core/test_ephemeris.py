@@ -103,40 +103,40 @@ class TestSiderealLongitude:
 
 class TestAscendant:
     def test_ascendant_range_valid(self) -> None:
-        # São Paulo: -23.55°S, -46.63°W
+        # Londres: 51.50°N, -0.12°W
         dt = datetime(2000, 6, 21, 12, 0)
-        asc = ascendant(dt, lat=-23.55, lon=-46.63)
+        asc = ascendant(dt, lat=51.50, lon=-0.12)
         assert 0 <= asc < 360
 
     def test_ascendant_changes_with_time(self) -> None:
         # O Ascendente muda ~1° a cada 4 minutos
         dt1 = datetime(2000, 6, 21, 12, 0)
         dt2 = datetime(2000, 6, 21, 14, 0)
-        asc1 = ascendant(dt1, lat=-23.55, lon=-46.63)
-        asc2 = ascendant(dt2, lat=-23.55, lon=-46.63)
+        asc1 = ascendant(dt1, lat=51.50, lon=-0.12)
+        asc2 = ascendant(dt2, lat=51.50, lon=-0.12)
         assert asc1 != asc2
 
 
 class TestSunriseSunset:
     def test_sunrise_before_sunset(self) -> None:
         dt = datetime(2000, 6, 21)
-        lat, lon = -23.55, -46.63  # São Paulo
+        lat, lon = 51.50, -0.12  # Londres
         sr = sunrise(dt, lat, lon)
         ss = sunset(dt, lat, lon)
         assert sr < ss
 
     def test_sunrise_is_datetime(self) -> None:
         dt = datetime(2000, 6, 21)
-        sr = sunrise(dt, lat=-23.55, lon=-46.63)
+        sr = sunrise(dt, lat=51.50, lon=-0.12)
         assert isinstance(sr, datetime)
 
     def test_sunset_is_datetime(self) -> None:
         dt = datetime(2000, 6, 21)
-        ss = sunset(dt, lat=-23.55, lon=-46.63)
+        ss = sunset(dt, lat=51.50, lon=-0.12)
         assert isinstance(ss, datetime)
 
-    def test_sunrise_sao_paulo_summer_solstice_approx(self) -> None:
-        # Nascer do sol em São Paulo no solstício de junho ≈ 10:00 UTC (07:00 BRT)
+    def test_sunrise_london_summer_solstice_approx(self) -> None:
+        # Nascer do sol em Londres no solstício de junho ≈ 03:43 UTC (04:43 BST)
         dt = datetime(2000, 6, 21)
-        sr = sunrise(dt, lat=-23.55, lon=-46.63)
-        assert 9 <= sr.hour <= 11, f"Nascer do sol inesperado: {sr}"
+        sr = sunrise(dt, lat=51.50, lon=-0.12)
+        assert 3 <= sr.hour <= 5, f"Nascer do sol inesperado: {sr}"
