@@ -1,5 +1,5 @@
 """
-Testes do motor Tzolkin Maya (Dreamspell) — História 2.4.
+Testes do motor Tzolkin Maya (Dreamspell).
 
 Unitários: dreamspell_days, kin, tom, selo, oráculo (sem pyswisseph).
 Integração: 10 datas conhecidas da tradição Dreamspell.

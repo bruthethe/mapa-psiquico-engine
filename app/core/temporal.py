@@ -83,12 +83,7 @@ def local_to_utc(dt: datetime, tz_name: str) -> datetime:
 
 
 def resolve_status(time_input: TimeInput, id_a: int, id_b: int) -> TemporalStatus:
-    """
-    Determina o status temporal a partir dos IDs produzidos pelos dois pontos de teste.
-
-    Chamado por cada motor após calcular id_a (de point_a) e id_b (de point_b).
-    Quando os dois pontos de tempo produzem IDs distintos, retorna HYBRID.
-    """
+    """Determina o status temporal: EXACT, SAFE ou HYBRID conforme os IDs calculados."""
     if time_input.type == TimeInputType.EXACT:
         return TemporalStatus.EXACT
     if id_a == id_b:

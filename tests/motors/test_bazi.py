@@ -92,14 +92,14 @@ class TestPilaresConhecidos:
     """
 
     def test_2000_01_01_dia_jia_xu(self):
-        """Dia 甲戌: stem=甲(madeira), branch=戌(cão) → id_gatilho=4 (Regra Oitava Superior)."""
+        """Dia 甲戌: stem=甲(madeira), branch=戌(cão) → id_gatilho=4."""
         time_input = parse_time_input(exact_time=time(12, 0))
         result = calculate_bazi(date(2000, 1, 1), time_input, "UTC")
 
         assert isinstance(result, BaZiResult)
         assert result.dia.animal == "cao"
         assert result.dia.elemento == "madeira"
-        assert result.dia.id_gatilho == 4       # 8→4 pela Regra da Oitava Superior
+        assert result.dia.id_gatilho == 4
         assert result.vote == 4
 
     def test_2000_01_01_ano_ji_mao(self):
@@ -169,7 +169,7 @@ class TestStructura:
         assert result.vote == result.dia.id_gatilho
 
     def test_cao_redireciona_para_4(self):
-        """Se o Pilar do Dia for Cão (branch=戌), id_gatilho deve ser 4 (Oitava Superior)."""
+        """Se o Pilar do Dia for Cão (branch=戌), id_gatilho deve ser 4."""
         # 2000-01-01 = 甲戌 (Cão)
         time_input = parse_time_input(exact_time=time(12, 0))
         result = calculate_bazi(date(2000, 1, 1), time_input, "UTC")

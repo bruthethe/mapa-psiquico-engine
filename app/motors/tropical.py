@@ -162,7 +162,6 @@ def calculate_tropical(
     if lat is not None and lon is not None:
         asc = _ascendant_result(time_input, dt_a, dt_b, lat, lon)
 
-    # overall_status: status mais crítico entre Sol e Lua (HYBRID < SAFE < EXACT)
     overall_status = min(sol.status, lua.status)
 
     return TropicalResult(

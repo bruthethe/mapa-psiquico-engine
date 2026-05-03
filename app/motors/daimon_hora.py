@@ -83,7 +83,7 @@ def _day_context(
 def _calc_hora(
     dt_utc: datetime, birth_date: date, lat: float, lon: float
 ) -> tuple[str, int, int, str]:
-    """Retorna (planeta, id_gatilho, numero_hora 1-24, periodo) para um datetime UTC."""
+    """Retorna (planeta, id, numero_hora 1-24, periodo) para um datetime UTC."""
     sr, ss, next_sr, weekday = _day_context(dt_utc, birth_date, lat, lon)
     start_idx = _WEEKDAY_START_IDX[weekday]
 

@@ -13,15 +13,7 @@ _LOOKUP_OVERRIDES: dict[int, int] = {8: 4, 22: 4}
 
 
 def theosophic_reduce(n: int) -> int:
-    """
-    Reduz n teosoficamente até 1–9, parando em números mestres (11, 22, 33).
-
-    Exemplos:
-        29  → 11   (2+9=11, mestre — para)
-        44  → 8    (4+4=8)
-        33  → 33   (mestre — para imediatamente)
-        100 → 1    (1+0+0=1)
-    """
+    """Reduz n teosoficamente até 1–9, preservando 11, 22 e 33."""
     if n < 0:
         raise ValueError(f"Redução teosófica não opera em negativos: {n}")
     while n > 9 and n not in MASTER_NUMBERS:
@@ -42,10 +34,7 @@ class MasterLabel:
 
 
 def get_master_label(id_: int) -> MasterLabel | None:
-    """
-    Retorna o label de número mestre para 11, 22 ou 33. None para IDs comuns.
-
-"""
+    """Retorna o label especial para 11, 22 ou 33. None para demais IDs."""
     entry = global_rules().get("labels_mestres", {}).get(str(id_))
     if entry is None:
         return None

@@ -1,8 +1,4 @@
-"""
-Motor Ba Zi (Astrologia Chinesa).
-
-Calcula os Quatro Pilares (Ano, Mês, Dia, Hora) e converte em id_gatilho.
-"""
+"""Motor Ba Zi (Astrologia Chinesa) — calcula os Quatro Pilares e retorna IDs."""
 
 from __future__ import annotations
 
@@ -52,15 +48,12 @@ def _load_data() -> dict:
 
 
 def _raw_id(animal: str) -> int:
-    """id_gatilho bruto (antes de lookup_id) para um animal."""
+    """Retorna o ID configurado para um animal."""
     return _load_data()["data_master_bazi"]["mapeamento_de_saida"][animal]["id_gatilho"]
 
 
 def _hour_branch(hour: int) -> int:
-    """
-    Converte hora do dia (0–23) em branch index (0–11) via tabela shi_chen.
-    Fórmula: cada shi_chen tem 2h; shi_chen do Rato cobre 23:00–01:00.
-    """
+    """Converte hora do dia (0–23) em branch index (0–11)."""
     return (hour + 1) // 2 % 12
 
 
