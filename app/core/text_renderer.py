@@ -18,8 +18,8 @@ _CAP_TITLES = {
 }
 
 _LABEL_MAP = {
-    "id_dominante": "ID Dominante",
-    "id_dominante_b": "ID Dominante B",
+    "id_dominante": "Dominant archetype ID",
+    "id_dominante_b": "Dominant archetype ID (B)",
     "status": "Status",
     "master_label": "Label Mestre",
     "master_label_b": "Label Mestre B",
@@ -176,13 +176,13 @@ def _render_prefacio(report: dict) -> list[str]:
     pref = report["prefacio"]
 
     if c.get("id_dominante_b") is not None:
-        lines.append(f"Status: HÍBRIDO (Frequência em Transição)")
+        lines.append(f"Status: HYBRID (transition frequency)")
         lines.append(
-            f"ID Dominante: {c['id_dominante']} | {c['id_dominante_b']}"
+            f"Dominant archetype ID: {c['id_dominante']} | {c['id_dominante_b']}"
         )
     else:
         lines.append(f"Status: {pref.get('status', '—')}")
-        lines.append(f"ID Dominante: {c['id_dominante']}")
+        lines.append(f"Dominant archetype ID: {c['id_dominante']}")
 
     ml = pref.get("master_label")
     if ml:
