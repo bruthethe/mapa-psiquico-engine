@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
 from datetime import date, datetime, time
 from functools import lru_cache
 
@@ -12,6 +11,7 @@ import swisseph as swe
 from app.core.config import data_path
 from app.core.ephemeris import Planet, tropical_longitude
 from app.core.ids import lookup_id
+from app.core.motor_types import BaZiPillar, BaZiPilarHora, BaZiResult
 from app.core.temporal import TemporalStatus, TimeInput, local_to_utc, resolve_status
 
 # 12 Ramos Terrestres (地支): índice 0=子(Rato) … 11=亥(Porco)
@@ -62,37 +62,6 @@ def _calc_hour_stem(day_stem_idx: int, hour_branch_idx: int) -> int:
     rato_start = _HOUR_STEM_START[day_stem_idx % 5]
     return (rato_start + hour_branch_idx) % 10
 
-
-# ── Dataclasses de resultado ───────────────────────────────────────────────────
-
-
-@dataclass(frozen=True)
-class BaZiPillar:
-    animal: str      # "rato", "boi", "tigre", ..., "porco"
-    elemento: str    # "madeira", "fogo", "terra", "metal", "agua"
-    id_gatilho: int
-
-
-@dataclass(frozen=True)
-class BaZiPilarHora:
-    """Pilar da Hora."""
-    animal: str
-    elemento: str
-    id_gatilho: int
-    status: TemporalStatus
-    animal_b: str | None = None
-    elemento_b: str | None = None
-    id_gatilho_b: int | None = None
-
-
-@dataclass
-class BaZiResult:
-    ano: BaZiPillar
-    mes: BaZiPillar
-    dia: BaZiPillar
-    hora: BaZiPilarHora
-    vote: int
-    overall_status: TemporalStatus
 
 
 # ── Cálculo de cada pilar ──────────────────────────────────────────────────────

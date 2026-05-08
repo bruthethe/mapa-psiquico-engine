@@ -8,13 +8,13 @@ sidereal da Lua (ayanamsa Lahiri) e dos 7 grahas principais.
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
 from datetime import date, datetime
 from functools import lru_cache
 
 from app.core.config import data_path
 from app.core.ephemeris import Planet, sidereal_longitude
 from app.core.ids import lookup_id
+from app.core.motor_types import AtmakarakaResult, NakshatraResult, VedicaResult
 from app.core.temporal import TemporalStatus, TimeInput, local_to_utc, resolve_status
 
 # 360° ÷ 27 Nakshatras = 13°20' por Nakshatra
@@ -58,38 +58,6 @@ def _purushartha(nakshatra_idx: int) -> str:
     """Deriva o Purushartha pelo ciclo sequencial Dharma/Artha/Kama/Moksha."""
     return _PURUSHARTHAS[nakshatra_idx % 4]
 
-
-@dataclass(frozen=True)
-class NakshatraResult:
-    index: int           # 0–26
-    nome: str
-    id_gatilho: int      # após lookup_id()
-    regente: str         # nome do graha em sânscrito (ex: "ketu")
-    pada: int            # 1–4
-    purushartha: str     # "Dharma" | "Artha" | "Kama" | "Moksha"
-    simbolo: str
-    deidade: str
-    qualidade: str
-    status: TemporalStatus
-    nome_b: str | None = None
-    id_gatilho_b: int | None = None
-    pada_b: int | None = None
-
-
-@dataclass(frozen=True)
-class AtmakarakaResult:
-    graha: str          # nome em sânscrito (ex: "guru")
-    id_gatilho: int     # após lookup_id()
-    grau_no_signo: float
-
-
-@dataclass
-class VedicaResult:
-    nakshatra: NakshatraResult
-    atmakaraka: AtmakarakaResult
-    vote: int
-    vote_b: int | None
-    overall_status: TemporalStatus
 
 
 def _calc_nakshatra(sidereal_lon: float) -> tuple[int, int, dict]:

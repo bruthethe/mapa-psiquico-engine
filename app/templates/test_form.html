@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Mapa Psíquico — Teste</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --bg:          #f5f0e8;
+      --surface:     #fdfaf5;
+      --border:      #e5ddd0;
+      --text:        #1a1a1a;
+      --muted:       #777;
+      --subtle:      #bbb;
+      --accent:      #5c3d1e;
+      --shadow:      0 1px 4px rgba(0,0,0,0.07);
+      --radius:      6px;
+      --sombra-bg:   #17100a;
+      --sombra-text: #e8d5b8;
+      --sombra-muted:#9a7a55;
+    }
+
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 4rem;
+      color: var(--text);
+      line-height: 1.7;
+      background: var(--bg);
+    }
+
+    /* ── Formulário ─────────────────────────────────────────────── */
+    form { font-family: monospace; }
+    fieldset { margin-bottom: 1rem; border: 1px solid #ccc; padding: .75rem; }
+    legend { font-weight: bold; }
+    label { display: block; margin-top: .5rem; font-size: .9rem; }
+    input[type=text], select {
+      width: 100%; padding: .3rem .5rem;
+      font-family: monospace; font-size: .9rem;
+      border: 1px solid #bbb;
+    }
+    .conditional { display: none; margin-top: .5rem; }
+    button[type=submit] {
+      margin-top: .5rem; padding: .5rem 1.5rem;
+      font-size: 1rem; cursor: pointer;
+    }
+    .error {
+      color: #900; border: 1px solid #900;
+      padding: .75rem; margin: 1rem 0; font-family: monospace;
+    }
+
+    /* ── Divisor de seção ───────────────────────────────────────── */
+    .section {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .section-header {
+      display: flex; align-items: baseline; gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+    .section-num {
+      font-family: monospace; font-size: .7rem;
+      color: var(--subtle); letter-spacing: .05em;
+    }
+    .section-title {
+      font-family: monospace; font-size: .8rem;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: var(--muted);
+    }
+
+    /* ── Cards ──────────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+    .card-label {
+      font-family: monospace; font-size: .65rem;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); margin-bottom: .4rem;
+    }
+    .card-title {
+      font-size: 1.05rem; font-weight: bold;
+      margin-bottom: .6rem; color: var(--text);
+    }
+    .card-text {
+      font-size: .875rem; line-height: 1.6; color: #444;
+    }
+
+    .card-shadow {
+      background: var(--sombra-bg);
+      border-color: #3d2b0a;
+    }
+    .card-shadow .card-label { color: var(--sombra-muted); }
+    .card-shadow .card-title { color: var(--sombra-text); }
+    .card-shadow .card-text  { color: #c4a87a; }
+
+    /* ── Grids ──────────────────────────────────────────────────── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; }
+    .grid-2-wide { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+
+    /* ── Narrativa ──────────────────────────────────────────────── */
+    .narrative { margin-top: 1.5rem; }
+    .narrative p { margin: 0 0 1rem; font-size: 1rem; line-height: 1.8; }
+    .narrative-sub { margin-top: 1.25rem; }
+    .narrative-sub-label {
+      font-family: monospace; font-size: .7rem;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--subtle); margin-bottom: .4rem;
+    }
+
+    /* ── Prefácio / Conclusão ───────────────────────────────────── */
+    .preface p {
+      font-size: 1.1rem; font-style: italic;
+      color: #333; line-height: 1.85;
+    }
+
+    /* ── Cap 2: Luminares ───────────────────────────────────────── */
+    .luminar-glyph {
+      font-size: 2.5rem; line-height: 1;
+      margin-bottom: .35rem; display: block;
+    }
+    .luminar-signo {
+      font-size: 1rem; font-weight: bold;
+      text-transform: capitalize; margin-bottom: .2rem;
+    }
+    .luminar-regente {
+      font-family: monospace; font-size: .75rem;
+      color: var(--muted); margin-bottom: .75rem;
+    }
+    .luminar-text { font-size: .875rem; line-height: 1.6; color: #444; }
+
+    /* ── Cap 4: Ba Zi ───────────────────────────────────────────── */
+    .bazi-card { text-align: center; padding: 1rem .75rem; }
+    .bazi-pilar {
+      font-family: monospace; font-size: .65rem;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--subtle); margin-bottom: .5rem;
+    }
+    .bazi-animal {
+      font-size: 1rem; font-weight: bold;
+      text-transform: capitalize; margin-bottom: .25rem;
+    }
+    .bazi-elemento {
+      font-family: monospace; font-size: .75rem;
+      text-transform: capitalize; color: var(--muted);
+    }
+
+    /* ── Cap 5: Tzolkin ─────────────────────────────────────────── */
+    .kin-card { padding: 1.5rem; text-align: center; }
+    .kin-number {
+      font-family: monospace; font-size: .75rem;
+      color: var(--muted); margin-bottom: .4rem;
+    }
+    .kin-nome { font-size: 1.2rem; font-weight: bold; margin-bottom: .3rem; }
+    .kin-tom {
+      font-family: monospace; font-size: .8rem;
+      color: var(--muted); margin-bottom: .75rem;
+    }
+    .kin-essencia { font-size: .85rem; color: #555; }
+
+    .oracle-card { text-align: center; padding: 1rem .75rem; }
+    .oracle-pos {
+      font-family: monospace; font-size: .65rem;
+      text-transform: uppercase; letter-spacing: .1em;
+      margin-bottom: .4rem;
+    }
+    .oracle-nome { font-size: .9rem; font-weight: bold; margin-bottom: .2rem; }
+    .oracle-essencia { font-size: .75rem; }
+
+    .cor-vermelho { background: #7b1c14; color: #fff; border-color: #5a1510; }
+    .cor-vermelho .oracle-pos { color: #e8a09a; }
+    .cor-branco   { background: #f0ece5; color: #333; }
+    .cor-branco   .oracle-pos { color: var(--muted); }
+    .cor-azul     { background: #0f3a5c; color: #fff; border-color: #0a2940; }
+    .cor-azul     .oracle-pos { color: #8bb8d4; }
+    .cor-amarelo  { background: #7a5c0a; color: #fff; border-color: #5c4408; }
+    .cor-amarelo  .oracle-pos { color: #e8cc80; }
+
+    /* ── Cap 6: Numerologia ─────────────────────────────────────── */
+    .big-num {
+      font-size: 5.5rem; font-weight: bold; line-height: 1;
+      letter-spacing: -.05em; color: var(--accent);
+    }
+    .big-num-sep { font-size: 3rem; color: var(--border); margin: 0 .5rem; }
+    .big-num-label {
+      font-family: monospace; font-size: .7rem;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); margin-top: .5rem;
+    }
+
+    /* ── Cap 7: Tarô ────────────────────────────────────────────── */
+    .taro-card { display: flex; gap: 1.5rem; align-items: flex-start; }
+    .taro-arcano-num {
+      font-family: monospace; font-size: 3rem;
+      font-weight: bold; color: var(--accent);
+      line-height: 1; flex-shrink: 0; width: 3.5rem;
+      text-align: center; padding-top: .2rem;
+    }
+    .taro-nome { font-size: 1.1rem; font-weight: bold; margin-bottom: .5rem; }
+
+    .iching-card { display: flex; gap: 1.5rem; align-items: flex-start; }
+    .iching-hex {
+      font-family: monospace; font-size: 2.5rem;
+      line-height: 1; flex-shrink: 0; width: 3.5rem;
+      text-align: center; color: var(--muted); padding-top: .3rem;
+    }
+    .iching-nome { font-size: 1rem; font-weight: bold; margin-bottom: .3rem; }
+    .iching-sentenca { font-size: .875rem; color: var(--muted); font-style: italic; }
+
+    /* ── Cap 8+9: Labels em destaque ────────────────────────────── */
+    .badge-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.25rem; }
+    .badge {
+      font-family: monospace; font-size: .75rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 3px; padding: .25rem .65rem;
+    }
+    .badge strong { color: var(--muted); margin-right: .35rem; font-size: .65rem; text-transform: uppercase; }
+
+    /* ── Cap 10: HD pills ───────────────────────────────────────── */
+    .hd-table { width: 100%; border-collapse: collapse; font-size: .875rem; margin-bottom: 1.25rem; }
+    .hd-table td { padding: .4rem 0; border-bottom: 1px solid var(--border); }
+    .hd-table td:first-child { font-family: monospace; font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); width: 40%; }
+    .hd-canais { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .hd-canal {
+      font-family: monospace; font-size: .8rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 3px; padding: .15rem .5rem;
+    }
+
+    /* ── Cap 11: Panteões ───────────────────────────────────────── */
+    .pantheon-card { padding: 1rem 1.1rem; }
+    .pantheon-tradition {
+      font-family: monospace; font-size: .65rem;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); margin-bottom: .3rem;
+    }
+    .pantheon-deity { font-size: 1rem; font-weight: bold; margin-bottom: .6rem; }
+    .pantheon-text { font-size: .825rem; line-height: 1.6; color: #444; }
+
+    /* ── Cap 12: Material tiles ─────────────────────────────────── */
+    .material-tile { text-align: center; padding: .9rem .75rem; }
+    .material-label {
+      font-family: monospace; font-size: .62rem;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); margin-bottom: .4rem;
+    }
+    .material-value { font-size: .9rem; font-weight: 600; }
+
+    /* ── Debug ──────────────────────────────────────────────────── */
+    details { margin-top: 3rem; font-family: monospace; font-size: .78rem; color: #888; }
+    details summary { cursor: pointer; color: #aaa; }
+    details pre { background: #f0f0ee; padding: .75rem; overflow-x: auto; white-space: pre-wrap; }
+  </style>
+  <script>
+    function updateHoraFields() {
+      var val = document.querySelector('input[name=tipo_hora]:checked').value;
+      document.getElementById('campo-exata').style.display  = (val === 'exata')  ? 'block' : 'none';
+      document.getElementById('campo-janela').style.display = (val === 'janela') ? 'block' : 'none';
+    }
+    window.addEventListener('DOMContentLoaded', updateHoraFields);
+  </script>
+</head>
+<body>
+  <h1 style="font-size:1.2rem; font-family:monospace; margin-bottom:1.5rem;">
+    Mapa Psíquico — Formulário de Testes
+  </h1>
+
+  {% if error %}
+  <div class="error"><strong>Erro:</strong> {{ error }}</div>
+  {% endif %}
+
+  <form method="post" action="/test">
+    <fieldset>
+      <legend>Identificação</legend>
+      <label>Nome completo de batismo *
+        <input type="text" name="nome_batismo" required value="{{ form.nome_batismo if form else '' }}">
+      </label>
+      <label>Nome social (opcional)
+        <input type="text" name="nome_social" value="{{ form.nome_social if form else '' }}">
+      </label>
+      <label>Gênero
+        <select name="genero">
+          {% set g = form.genero if form else 'masculino' %}
+          <option value="masculino" {% if g == 'masculino' %}selected{% endif %}>Masculino</option>
+          <option value="feminino"  {% if g == 'feminino'  %}selected{% endif %}>Feminino</option>
+          <option value="neutro"    {% if g == 'neutro'    %}selected{% endif %}>Neutro</option>
+        </select>
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Data de nascimento *</legend>
+      <label>DD/MM/AAAA
+        <input type="text" name="data_nascimento" placeholder="ex: 15/03/1990" required
+               pattern="\d{2}/\d{2}/\d{4}" value="{{ form.data_nascimento if form else '' }}">
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Hora de nascimento</legend>
+      {% set tipo = form.tipo_hora if form else 'nao_sei' %}
+      <label><input type="radio" name="tipo_hora" value="exata"
+             {% if tipo == 'exata' %}checked{% endif %} onchange="updateHoraFields()"> Hora exata</label>
+      <label><input type="radio" name="tipo_hora" value="janela"
+             {% if tipo == 'janela' %}checked{% endif %} onchange="updateHoraFields()"> Janela de 4h</label>
+      <label><input type="radio" name="tipo_hora" value="nao_sei"
+             {% if tipo == 'nao_sei' or not form %}checked{% endif %} onchange="updateHoraFields()"> Não sei</label>
+      <div id="campo-exata" class="conditional">
+        <label>Hora (HH:MM)
+          <input type="text" name="hora_exata" placeholder="ex: 14:30" pattern="\d{2}:\d{2}"
+                 value="{{ form.hora_exata if form else '' }}">
+        </label>
+      </div>
+      <div id="campo-janela" class="conditional">
+        <label>Início (HH:MM)
+          <input type="text" name="janela_inicio" placeholder="ex: 08:00" pattern="\d{2}:\d{2}"
+                 value="{{ form.janela_inicio if form else '' }}">
+        </label>
+        <label>Fim (HH:MM)
+          <input type="text" name="janela_fim" placeholder="ex: 12:00" pattern="\d{2}:\d{2}"
+                 value="{{ form.janela_fim if form else '' }}">
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Local de nascimento *</legend>
+      <label>Cidade *
+        <input type="text" name="cidade" required value="{{ form.cidade if form else '' }}">
+      </label>
+      <label>Estado / Província
+        <input type="text" name="estado" value="{{ form.estado if form else '' }}">
+      </label>
+      <label>País
+        <input type="text" name="pais" placeholder="ex: Brasil" value="{{ form.pais if form else '' }}">
+      </label>
+    </fieldset>
+
+    <button type="submit">Gerar Relatório</button>
+  </form>
+
+  {# ── RELATÓRIO ───────────────────────────────────────────────────── #}
+  {% if capitulos %}
+
+  {% set nc = narrative.get('capitulos', {}) if narrative else {} %}
+  {% set n1   = nc.get('cap1', {}) %}
+  {% set n2   = nc.get('cap2', {}) %}
+  {% set n3   = nc.get('cap3', {}) %}
+  {% set n4   = nc.get('cap4', {}) %}
+  {% set n5   = nc.get('cap5', {}) %}
+  {% set n6   = nc.get('cap6', {}) %}
+  {% set n7   = nc.get('cap7', {}) %}
+  {% set n89  = nc.get('cap8_9', {}) %}
+  {% set n10  = nc.get('cap10', {}) %}
+  {% set n11  = nc.get('cap11', {}) %}
+  {% set n12  = nc.get('cap12', {}) %}
+
+  {# ── PREFÁCIO ── #}
+  {% if narrative and narrative.get('prefacio') %}
+  <div class="section preface">
+    <p>{{ narrative.prefacio }}</p>
+  </div>
+  {% endif %}
+
+  {# ── CAP 1: ARQUÉTIPOS ── #}
+  {% set c1 = capitulos.cap1 %}
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">Arquétipos Centrais</span>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-label">Essência Solar</div>
+        <div class="card-title">{{ c1.arquetipos.essencia_solar }}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Máscara</div>
+        <div class="card-title">{{ c1.arquetipos.mascara }}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Refúgio Lunar</div>
+        <div class="card-title">{{ c1.arquetipos.refugio_lunar }}</div>
+      </div>
+      <div class="card card-shadow">
+        <div class="card-label">▲ Sombra</div>
+        <div class="card-title">{{ c1.goetia.demonio }}</div>
+      </div>
+    </div>
+
+    {% if n1.get('texto', {}).get('principal') %}
+    <div class="narrative"><p>{{ n1.texto.principal }}</p></div>
+    {% endif %}
+  </div>
+
+  {# ── CAP 2: TROPICAL ── #}
+  {% set c2 = capitulos.cap2 %}
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">Astrologia Tropical</span>
+    </div>
+
+    <div class="grid-3">
+      {# Sol #}
+      <div class="card">
+        <span class="luminar-glyph">☉</span>
+        <div class="luminar-signo">
+          {{ signo_glyphs.get(c2.sol.sign, '') }} {{ c2.sol.sign | capitalize }}
+        </div>
+        <div class="luminar-regente">Regente: {{ signo_regentes.get(c2.sol.sign, '—') }}</div>
+        {% if n2.get('texto', {}).get('luminares') %}
+        <div class="luminar-text">{{ n2.texto.luminares }}</div>
+        {% endif %}
+      </div>
+      {# Lua #}
+      <div class="card">
+        <span class="luminar-glyph">☽</span>
+        <div class="luminar-signo">
+          {{ signo_glyphs.get(c2.lua.sign, '') }} {{ c2.lua.sign | capitalize }}
+        </div>
+        <div class="luminar-regente">Regente: {{ signo_regentes.get(c2.lua.sign, '—') }}</div>
+      </div>
+      {# Ascendente #}
+      {% if c2.ascendente %}
+      <div class="card">
+        <span class="luminar-glyph" style="font-size:1.6rem; padding-top:.4rem;">AC</span>
+        <div class="luminar-signo">
+          {{ signo_glyphs.get(c2.ascendente.sign, '') }} {{ c2.ascendente.sign | capitalize }}
+        </div>
+        <div class="luminar-regente">Regente: {{ signo_regentes.get(c2.ascendente.sign, '—') }}</div>
+      </div>
+      {% endif %}
+    </div>
+
+    {% if n2.get('texto') %}
+    <div class="narrative">
+      {% if n2.texto.get('planetas') %}
+      <div class="narrative-sub">
+        <div class="narrative-sub-label">Planetas</div>
+        <p>{{ n2.texto.planetas }}</p>
+      </div>
+      {% endif %}
+      {% if n2.texto.get('temperamentos') %}
+      <div class="narrative-sub">
+        <div class="narrative-sub-label">Temperamentos</div>
+        <p>{{ n2.texto.temperamentos }}</p>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  {# ── CAP 3: VÉDICA ── #}
+  {% set c3 = capitulos.cap3 %}
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">Astrologia Védica</span>
+    </div>
+
+    <div class="badge-row">
+      <span class="badge"><strong>Nakshatra</strong>{{ c3.nakshatra.nome }}</span>
+      <span class="badge"><strong>Purushartha</strong>{{ c3.purushartha }}</span>
+      <span class="badge"><strong>Atmakaraka</strong>{{ c3.atmakaraka.graha | capitalize }}</span>
+      <span class="badge"><strong>Qualidade</strong>{{ c3.nakshatra.qualidade }}</span>
+    </div>
+
+    {% if n3.get('texto') %}
+    <div class="narrative">
+      {% if n3.texto.get('nakshatra') %}
+      <div class="narrative-sub">
+        <div class="narrative-sub-label">Nakshatra</div>
+        <p>{{ n3.texto.nakshatra }}</p>
+      </div>
+      {% endif %}
+      {% if n3.texto.get('destino') %}
+      <div class="narrative-sub">
+        <div class="narrative-sub-label">Destino</div>
+        <p>{{ n3.texto.destino }}</p>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  {# ── CAP 4: BA ZI ── #}
+  {% set c4 = capitulos.cap4 %}
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">Ba Zi — Quatro Pilares</span>
+    </div>
+
+    <div class="grid-4">
+      {% for pilar_key, pilar_label in [('ano','Ano'), ('mes','Mês'), ('dia','Dia'), ('hora','Hora')] %}
+      {% set p = c4[pilar_key] %}
+      <div class="card bazi-card">
+        <div class="bazi-pilar">{{ pilar_label }}</div>
+        <div class="bazi-animal">{{ p.animal | capitalize }}</div>
+        <div class="bazi-elemento">{{ p.elemento | capitalize }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if n4.get('texto') %}
+    <div class="narrative">
+      {% if n4.texto.get('pilares') %}
+      <div class="narrative-sub">
+        <div class="narrative-sub-label">Os Quatro Pilares</div>
+        <p>{{ n4.texto.pilares }}</p>
+      </div>
+      {% endif %}
+      {% if n4.texto.get('integracao') %}
+      <div class="narrative-sub">
+        <div class="narrative-sub-label">Integração</div>
+        <p>{{ n4.texto.integracao }}</p>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  {# ── CAP 5: TZOLKIN ── #}
+  {% set c5 = capitulos.cap5 %}
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">Tzolkin Maya</span>
+    </div>
+
+    {# Kin central #}
+    {% set cor_class = 'cor-' ~ (c5.selo.cor | lower) %}
+    <div class="card kin-card {{ cor_class }}" style="margin-bottom:1rem;">
+      <div class="kin-number">Kin {{ c5.kin }}</div>
+      <div class="kin-nome">{{ c5.selo.nome }}</div>
+      <div class="kin-tom">Tom {{ c5.tom.tom }} · {{ c5.tom.nome }}</div>
+      <div class="kin-essencia">{{ c5.selo.essencia }}</div>
+    </div>
+
+    {# Spread do oráculo #}
+    <div class="grid-2">
+      {% for pos_key, pos_label in [('guia','Guia'), ('analogo','Análogo'), ('antipoda','Antípoda'), ('oculto','Oculto')] %}
+      {% set o = c5.oraculo[pos_key] %}
+      {% set o_cor = 'cor-' ~ (o.cor | lower) %}
+      <div class="card oracle-card {{ o_cor }}">
+        <div class="oracle-pos">{{ pos_label }}</div>
+        <div class="oracle-nome">{{ o.nome }}</div>
+        <div class="oracle-essencia">{{ o.essencia }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if n5.get('texto') %}
+    <div class="narrative">
+      {% if n5.texto.get('kin') %}
+      <div class="narrative-sub">
+        <div class="narrative-sub-label">Kin</div>
+        <p>{{ n5.texto.kin }}</p>
+      </div>
+      {% endif %}
+      {% if n5.texto.get('oraculo') %}
+      <div class="narrative-sub">
+        <div class="narrative-sub-label">Oráculo</div>
+        <p>{{ n5.texto.oraculo }}</p>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  {# ── CAP 6: NUMEROLOGIA ── #}
+  {% set c6 = capitulos.cap6 %}
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-title">Numerologia</span>
+    </div>
+
+    <div style="display:flex; align-items:baseline; margin-bottom:1rem;">
+      <span class="big-num">{{ c6.pitagorica.caminho_vida }}</span>
+      <span class="big-num-sep">&amp;</span>
+      <span class="big-num">{{ c6.caldeia.numero_destino }}</span>
+    </div>
+    <div class="big-num-label">Caminho de Vida &nbsp;·&nbsp; Número de Destino</div>
+
+    {% if n6.get('texto', {}).get('numerologia') %}
+    <div class="narrative"><p>{{ n6.texto.numerologia }}</p></div>
+    {% endif %}
+  </div>
+
+  {# ── CAP 7: TARÔ & I CHING ── #}
+  {% set c7 = capitulos.cap7 %}
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <span class="section-title">Tarô &amp; I Ching</span>
+    </div>
+
+    <div class="grid-2-wide">
+      <div class="card">
+        <div class="taro-card">
+          <div class="taro-arcano-num">{{ c7.taro.arcano }}</div>
+          <div>
+            <div class="card-label">Arcano {{ c7.taro.arcano }}</div>
+            <div class="taro-nome">{{ c7.taro.nome_arcano }}</div>
+            {% if n7.get('texto', {}).get('taro') %}
+            <div class="card-text">{{ n7.texto.taro }}</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="iching-card">
+          <div class="iching-hex">☯</div>
+          <div>
+            <div class="card-label">Hexagrama {{ c7.iching.hexagrama }}</div>
+            <div class="iching-nome">{{ c7.iching.nome }}</div>
+            <div class="iching-sentenca">{{ c7.iching.sentenca }}</div>
+            {% if n7.get('texto', {}).get('iching') %}
+            <div class="card-text" style="margin-top:.6rem;">{{ n7.texto.iching }}</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# ── CAP 8+9: ALQUIMIA & DAIMON ── #}
+  {% set c8 = capitulos.cap8 %}
+  {% set c9 = capitulos.cap9 %}
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">08 · 09</span>
+      <span class="section-title">A Força Transmutadora</span>
+    </div>
+
+    <div class="badge-row">
+      <span class="badge"><strong>Fase</strong>{{ c8.fase }}</span>
+      <span class="badge"><strong>Operação</strong>{{ c8.operacao }}</span>
+      <span class="badge"><strong>Elemento</strong>{{ c8.elemento }}</span>
+      <span class="badge"><strong>Daimon</strong>{{ c9.planeta }}</span>
+      <span class="badge"><strong>Hora Nº</strong>{{ c9.numero_hora }}</span>
+      <span class="badge"><strong>Tipo</strong>{{ c9.tipo }}</span>
+    </div>
+
+    {% if n89.get('texto') %}
+    <div class="narrative">
+      {% if n89.texto.get('alquimia') %}
+      <div class="narrative-sub">
+        <div class="narrative-sub-label">Alquimia</div>
+        <p>{{ n89.texto.alquimia }}</p>
+      </div>
+      {% endif %}
+      {% if n89.texto.get('daimon') %}
+      <div class="narrative-sub">
+        <div class="narrative-sub-label">Daimon da Hora</div>
+        <p>{{ n89.texto.daimon }}</p>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  {# ── CAP 10: HUMAN DESIGN ── #}
+  {% set c10 = capitulos.cap10 %}
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <span class="section-title">Human Design</span>
+    </div>
+
+    <table class="hd-table">
+      <tr><td>Tipo</td><td>{{ c10.tipo }}</td></tr>
+      <tr><td>Estratégia</td><td>{{ c10.estrategia }}</td></tr>
+      <tr><td>Autoridade</td><td>{{ c10.autoridade }}</td></tr>
+      <tr><td>Chakra</td><td>{{ c10.chakra }}</td></tr>
+      <tr><td>Frequência</td><td>{{ c10.frequencia }}</td></tr>
+      <tr>
+        <td>Canais</td>
+        <td>
+          <div class="hd-canais">
+            {% for canal in c10.canais_ativos %}
+            <span class="hd-canal">{{ canal[0] }}–{{ canal[1] }}</span>
+            {% endfor %}
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Centros</td>
+        <td>{{ c10.centros_definidos | join(', ') }}</td>
+      </tr>
+    </table>
+
+    {% if n10.get('texto') %}
+    <div class="narrative">
+      {% if n10.texto.get('design') %}
+      <div class="narrative-sub">
+        <div class="narrative-sub-label">Design</div>
+        <p>{{ n10.texto.design }}</p>
+      </div>
+      {% endif %}
+      {% if n10.texto.get('pratica') %}
+      <div class="narrative-sub">
+        <div class="narrative-sub-label">Na Prática</div>
+        <p>{{ n10.texto.pratica }}</p>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  {# ── CAP 11: PANTEÕES ── #}
+  {% set c11 = capitulos.cap11 %}
+  {% set n11_divs = n11.get('texto', {}).get('divindades', {}) %}
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <span class="section-title">Galeria dos Panteões</span>
+    </div>
+
+    <div class="grid-2-wide">
+      {% for p_key, deity_name in c11.panteoes.divindades.items() %}
+      <div class="card pantheon-card">
+        <div class="pantheon-tradition">{{ panteao_names.get(p_key, p_key) }}</div>
+        <div class="pantheon-deity">{{ deity_name }}</div>
+        {% set p_text = n11_divs.get(p_key, '') %}
+        {% if p_text %}
+        <div class="pantheon-text">{{ p_text }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# ── CAP 12: MATERIALIZAÇÃO ── #}
+  {% set c12 = capitulos.cap12 %}
+  {% set mat = c12.materializacao %}
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">12</span>
+      <span class="section-title">Materialização Sensorial</span>
+    </div>
+
+    <div class="grid-4">
+      <div class="card material-tile">
+        <div class="material-label">Cor</div>
+        <div class="material-value">{{ mat.cores }}</div>
+      </div>
+      <div class="card material-tile">
+        <div class="material-label">Metal</div>
+        <div class="material-value">{{ mat.metais }}</div>
+      </div>
+      <div class="card material-tile">
+        <div class="material-label">Cristal</div>
+        <div class="material-value">{{ mat.cristais }}</div>
+      </div>
+      <div class="card material-tile">
+        <div class="material-label">Erva</div>
+        <div class="material-value">{{ mat.ervas }}</div>
+      </div>
+      <div class="card material-tile">
+        <div class="material-label">Nota</div>
+        <div class="material-value">{{ mat.notas }}</div>
+      </div>
+      <div class="card material-tile">
+        <div class="material-label">Geometria</div>
+        <div class="material-value">{{ mat.geometria }}</div>
+      </div>
+      <div class="card material-tile">
+        <div class="material-label">Animais</div>
+        <div class="material-value" style="font-size:.8rem;">
+          {{ mat.animais.terra }} · {{ mat.animais.agua }} · {{ mat.animais.ar }}
+        </div>
+      </div>
+      <div class="card material-tile">
+        <div class="material-label">Criatura</div>
+        <div class="material-value">{{ mat.criaturas }}</div>
+      </div>
+    </div>
+
+    {% if n12.get('texto', {}).get('principal') %}
+    <div class="narrative"><p>{{ n12.texto.principal }}</p></div>
+    {% endif %}
+  </div>
+
+  {# ── CONCLUSÃO ── #}
+  {% if narrative and narrative.get('conclusao') %}
+  <div class="section">
+    <div class="section-header">
+      <span class="section-num">—</span>
+      <span class="section-title">Síntese</span>
+    </div>
+    <div class="preface"><p>{{ narrative.conclusao }}</p></div>
+  </div>
+  {% endif %}
+
+  {% endif %}{# /if capitulos #}
+
+  {# ── DEBUG ── #}
+  {% if debug_info %}
+  <details>
+    <summary>debug</summary>
+    <pre>ID dominante: {{ debug_info.id_dominante }}  Status: {{ debug_info.status }}
+Fase 1: {{ debug_info.votes_fase1 }}
+Fase 2: {{ debug_info.votes_fase2 }}{% if debug_info.votes_fase1_b %}
+Fase 1-B: {{ debug_info.votes_fase1_b }}{% endif %}
+Timezone: {{ debug_info.tz_name }}  Lat: {{ debug_info.lat }}  Lon: {{ debug_info.lon }}</pre>
+  </details>
+  {% endif %}
+
+</body>
+</html>

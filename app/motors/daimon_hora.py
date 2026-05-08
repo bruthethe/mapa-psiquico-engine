@@ -13,11 +13,11 @@ Ponto de partida por dia da semana (hora 1 diurna = nascer do sol):
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 
 from app.core.ephemeris import sunrise, sunset
 from app.core.ids import lookup_id
+from app.core.motor_types import DaimonHoraMotorResult, DaimonHoraResult
 from app.core.temporal import TemporalStatus, TimeInput, local_to_utc, resolve_status
 
 # Ordem caldeia do mais lento para o mais rápido
@@ -31,26 +31,6 @@ _CHALDEAN_IDS: list[int] = [4, 3, 9, 1, 6, 5, 2]
 # Quinta→Júpiter(1), Sexta→Vênus(4), Sábado→Saturno(0), Domingo→Sol(3)
 _WEEKDAY_START_IDX: list[int] = [6, 2, 5, 1, 4, 0, 3]
 
-
-@dataclass(frozen=True)
-class DaimonHoraResult:
-    planeta: str           # "Sol", "Lua", "Marte", etc.
-    id_gatilho: int        # ID após lookup_id()
-    numero_hora: int       # 1–12 (diurna) ou 13–24 (noturna)
-    periodo: str           # "diurno" | "noturno"
-    status: TemporalStatus
-    planeta_b: str | None = None
-    id_gatilho_b: int | None = None
-    numero_hora_b: int | None = None
-    periodo_b: str | None = None
-
-
-@dataclass
-class DaimonHoraMotorResult:
-    daimon: DaimonHoraResult
-    vote: int
-    vote_b: int | None
-    overall_status: TemporalStatus
 
 
 # ── Helpers internos ───────────────────────────────────────────────────────────

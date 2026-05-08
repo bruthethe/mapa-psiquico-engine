@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import json
 from collections import defaultdict, deque
-from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from functools import lru_cache
 
@@ -18,6 +17,7 @@ import swisseph as swe
 
 from app.core.config import data_path, ephemeris_path
 from app.core.ids import lookup_id
+from app.core.motor_types import HDActivation, HDResult
 from app.core.temporal import TemporalStatus, TimeInput, TimeInputType, local_to_utc
 
 # ── Constantes do corpo gráfico HD ────────────────────────────────────────────
@@ -135,14 +135,6 @@ def lon_to_line(lon: float) -> int:
 # ── Cálculo de ativações ───────────────────────────────────────────────────────
 
 
-@dataclass(frozen=True)
-class HDActivation:
-    planeta: str
-    longitude: float
-    gate: int    # 1–64
-    linha: int   # 1–6
-
-
 def _calc_activations(dt_utc: datetime) -> list[HDActivation]:
     """Calcula 13 ativações planetárias para um momento UTC."""
     swe.set_ephe_path(str(ephemeris_path()))
@@ -241,27 +233,6 @@ def _derive_autoridade(defined: frozenset[str], active_gates: frozenset[int]) ->
     return "Lunar"
 
 
-# ── Dataclasses de resultado ───────────────────────────────────────────────────
-
-
-@dataclass
-class HDResult:
-    personalidade: list[HDActivation]
-    design: list[HDActivation]
-    centros_definidos: frozenset[str]
-    canais_ativos: list[tuple[int, int]]
-    tipo: str
-    tipo_id_gatilho: int
-    autoridade: str
-    autoridade_id_gatilho: int
-    porta_sol_personalidade: int   # Porta do Sol de Personalidade (1–64)
-    vote: int
-    overall_status: TemporalStatus
-    tipo_b: str | None = None
-    tipo_b_id_gatilho: int | None = None
-    porta_sol_personalidade_b: int | None = None
-
-
 # ── Snapshot interno ───────────────────────────────────────────────────────────
 
 
@@ -332,6 +303,7 @@ def calculate_hd(
         centros_definidos=snap_a["defined"],
         canais_ativos=snap_a["canais"],
         tipo=tipo_a,
+        estrategia=tipo_data[tipo_a]["estrategia"],
         tipo_id_gatilho=tipo_id,
         autoridade=snap_a["autoridade"],
         autoridade_id_gatilho=aut_id,
@@ -339,6 +311,7 @@ def calculate_hd(
         vote=tipo_id,
         overall_status=status,
         tipo_b=tipo_b if hybrid else None,
+        estrategia_b=tipo_data[tipo_b]["estrategia"] if hybrid else None,
         tipo_b_id_gatilho=lookup_id(tipo_data[tipo_b]["id_gatilho"]) if hybrid else None,
         porta_sol_personalidade_b=sol_b if hybrid and sol_a != sol_b else None,
     )

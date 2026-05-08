@@ -8,13 +8,13 @@ planetárias no zodíaco tropical.
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
 from datetime import date, datetime
 from functools import lru_cache
 
 from app.core.config import data_path
 from app.core.ephemeris import Planet, ascendant, tropical_longitude
 from app.core.ids import lookup_id
+from app.core.motor_types import PlanetResult, TropicalResult
 from app.core.temporal import TemporalStatus, TimeInput, local_to_utc, resolve_status
 
 # Chaves PT dos signos indexadas por sign_index (0=Áries … 11=Peixes)
@@ -52,25 +52,6 @@ def _sign_to_id(sign_key: str) -> int:
     return lookup_id(id_bruto)
 
 
-@dataclass(frozen=True)
-class PlanetResult:
-    planet: str           # chave PT: "sol", "lua", "marte", etc.
-    sign: str             # chave PT do signo em point_a
-    id_gatilho: int
-    status: TemporalStatus
-    sign_b: str | None = None
-    id_gatilho_b: int | None = None
-
-
-@dataclass
-class TropicalResult:
-    sol: PlanetResult
-    lua: PlanetResult
-    ascendente: PlanetResult | None   # None se hora desconhecida ou sem localização
-    planets: list[PlanetResult]       # 10 planetas (inclui sol e lua)
-    vote: int
-    vote_b: int | None
-    overall_status: TemporalStatus
 
 
 def _planet_result(
