@@ -1,5 +1,5 @@
 """
-Grupo A — MVP Core: Prefácio, Cap. 1 (Arquétipo Central), Cap. 12 (Materialização).
+Grupo A — MVP Core: Prefácio, Cap. 1 (Arquétipo Central), Cap. 11 (Materialização).
 
 Todos os capítulos aceitam ConsolidationResult e produzem um dataclass pronto
 para serialização. No status HYBRID (A ≠ B), os campos `_b` são preenchidos
@@ -35,7 +35,7 @@ class Cap1Data:
 
 
 @dataclass(frozen=True)
-class Cap12Data:
+class Cap11Data:
     materializacao: MaterializacaoData
     materializacao_b: MaterializacaoData | None   # preenchido apenas em HYBRID
 
@@ -64,11 +64,11 @@ def assemble_cap1(consolidation: ConsolidationResult) -> Cap1Data:
     )
 
 
-def assemble_cap12(consolidation: ConsolidationResult) -> Cap12Data:
+def assemble_cap11(consolidation: ConsolidationResult) -> Cap11Data:
     materializacao_b = None
     if consolidation.id_dominante_b is not None:
         materializacao_b = lookup_materializacao(consolidation.id_dominante_b)
-    return Cap12Data(
+    return Cap11Data(
         materializacao=lookup_materializacao(consolidation.id_dominante),
         materializacao_b=materializacao_b,
     )

@@ -148,22 +148,13 @@ cap8_9 (Alquimia + Daimon — dois sistemas, um texto unificado):
   texto: fase alquímica e guardião da hora como forças complementares — onde o leitor está
     no processo de transformação e quem o acompanhou na chegada ao mundo
 
-cap10 — Human Design:
-  tipo, estrategia, autoridade (copiados)
-  centros_definidos (copiado — array)
-  canais_ativos (copiado — array de pares)
-  porta_sol: copiado de porta_sol_personalidade
-  chakra, frequencia (copiados)
-  texto_design: tipo, estratégia e autoridade como arquitetura de decisão interna do leitor
-  texto_pratica: centros definidos e canais como dons em ação — onde há força consistente
-
-cap11 — Panteões:
+cap10 — Panteões:
   divindades: array de 14 objetos, iterando sobre panteoes.divindades
   cada objeto: { nome (valor do dict), pantheon (chave do dict), texto (gerado) }
   Use contexto.id_dominante para relacionar cada divindade ao arquétipo dominante
   texto por divindade: 3 frases relacionando esse ser mítico ao perfil arquetípico do leitor
 
-cap12 — Materialização Sensorial:
+cap11 — Materialização Sensorial:
   cor, metal, cristal, erva, nota, geometria, animais, criatura (copiados de materializacao)
   texto: esses elementos como extensão simbólica do arquétipo — como expressam quem o leitor é
     no mundo material e sensorial
@@ -180,12 +171,6 @@ Formato de resposta (JSON puro):
       "daimon_planeta": "...", "daimon_numero": 0, "texto": "..."
     },
     "cap10": {
-      "tipo": "...", "estrategia": "...", "autoridade": "...",
-      "centros_definidos": [...], "canais_ativos": [...],
-      "porta_sol": 0, "chakra": "...", "frequencia": "...",
-      "texto_design": "...", "texto_pratica": "..."
-    },
-    "cap11": {
       "divindades": [
         {"nome": "...", "pantheon": "arcanjo",          "texto": "..."},
         {"nome": "...", "pantheon": "dogon",             "texto": "..."},
@@ -203,7 +188,7 @@ Formato de resposta (JSON puro):
         {"nome": "...", "pantheon": "xinto",             "texto": "..."}
       ]
     },
-    "cap12": {
+    "cap11": {
       "cor": "...", "metal": "...", "cristal": "...", "erva": "...",
       "nota": "...", "geometria": "...", "animais": {...}, "criatura": "...",
       "texto": "..."
@@ -238,7 +223,7 @@ _STRIP_KEYS: frozenset[str] = frozenset({
     "autoridade_id_gatilho",
     "vote", "vote_b", "voto",
     "status", "overall_status", "status_temporal",
-    "fallback", "ajuste_frequencia",
+    "fallback", "ajuste_frequencia", "sistema",
     "index",
     "id_dados",
     "longitude",
@@ -356,12 +341,6 @@ def _build_digest(caps: dict, prefacio: dict, genero: str) -> dict:
     if cap9 := caps.get("cap9"):
         digest["daimon"] = {"planeta": cap9.get("planeta")}
 
-    if cap10 := caps.get("cap10"):
-        digest["hd"] = {
-            "tipo": cap10.get("tipo"),
-            "autoridade": cap10.get("autoridade"),
-        }
-
     return digest
 
 
@@ -375,7 +354,7 @@ def _prepare_for_narrator(report: dict, genero: str = "masculino") -> dict:
 _TIMEOUT = 120
 
 _CAPS_LOTE_1 = {"cap1", "cap2", "cap3", "cap4", "cap5", "cap6"}
-_CAPS_LOTE_2 = {"cap7", "cap10", "cap11", "cap12"}
+_CAPS_LOTE_2 = {"cap7", "cap10", "cap11"}
 
 
 def _call_api(client: anthropic.Anthropic, payload: dict, instruction: str) -> dict:
@@ -407,10 +386,13 @@ def _call_api(client: anthropic.Anthropic, payload: dict, instruction: str) -> d
 def generate_narrative(report_data: dict, genero: str = "masculino") -> dict:
     """Recebe dados brutos do relatório, retorna dict narrativo conforme schema canônico.
 
-    3 lotes: cap1-6 | cap7+cap8_9+cap10-12 | prefácio+conclusão.
+    3 lotes: cap1-6 | cap7+cap8_9+cap10-11 | prefácio+conclusão.
     Fallback gracioso: retorna {} se API_KEY ausente, timeout ou qualquer falha.
     Schema de output definido em Estrutura.md.
     """
+    # DEV: narrator desativado durante desenvolvimento do frontend
+    return {}
+
     try:
         client = _get_client()
         narrator_input = _prepare_for_narrator(report_data, genero=genero)
@@ -423,7 +405,7 @@ def generate_narrative(report_data: dict, genero: str = "masculino") -> dict:
             "capitulos": {k: v for k, v in caps.items() if k in _CAPS_LOTE_1},
         }
 
-        # Lote 2: cap7, cap8+cap9 merged, cap10–12
+        # Lote 2: cap7, cap8+cap9 merged, cap10–11
         lote2_caps: dict = {k: v for k, v in caps.items() if k in _CAPS_LOTE_2}
         lote2_caps["cap8_9"] = {
             "alquimia": caps.get("cap8", {}),

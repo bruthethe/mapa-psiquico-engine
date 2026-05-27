@@ -5,14 +5,18 @@ COPY pyproject.toml .
 
 # ── Desenvolvimento ────────────────────────────────────────────────────────────
 FROM base AS dev
-RUN pip install --no-cache-dir -e ".[dev]"
+RUN pip install --no-cache-dir -e ".[dev]" && \
+    playwright install chromium && \
+    apt-get update && playwright install-deps chromium && rm -rf /var/lib/apt/lists/*
 COPY . .
 EXPOSE 8000
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
 # ── Produção ───────────────────────────────────────────────────────────────────
 FROM base AS production
-RUN pip install --no-cache-dir -e "."
+RUN pip install --no-cache-dir -e "." && \
+    playwright install chromium && \
+    apt-get update && playwright install-deps chromium && rm -rf /var/lib/apt/lists/*
 COPY . .
 EXPOSE 8000
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]

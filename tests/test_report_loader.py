@@ -96,4 +96,4 @@ class TestReportLoader:
         assert "refugio" in data["lua"]
 
     def test_goetia_returns_string(self):
-        assert lookup("sombra-goetia", 1) == "O Tirano (Paimon)"
+        assert lookup("sombra-goetia", 1) == "Tirano (Paimon)"

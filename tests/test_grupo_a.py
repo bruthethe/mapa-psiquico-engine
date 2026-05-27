@@ -1,10 +1,10 @@
-"""Testes do Grupo A — Prefácio, Cap. 1, Cap. 12 (5.4)."""
+"""Testes do Grupo A — Prefácio, Cap. 1, Cap. 11 (5.4)."""
 
 import pytest
 
 from app.chapters.grupo_a import (
-    Cap1Data, Cap12Data, PrefacioData,
-    assemble_cap1, assemble_cap12, assemble_prefacio,
+    Cap1Data, Cap11Data, PrefacioData,
+    assemble_cap1, assemble_cap11, assemble_prefacio,
 )
 from app.core.consolidation import ConsolidationResult
 from app.core.ids import MasterLabel, get_master_label
@@ -101,30 +101,30 @@ class TestAssembleCap1:
 
 # ── Cap. 12 ───────────────────────────────────────────────────────────────────
 
-class TestAssembleCap12:
+class TestAssembleCap11:
 
     def test_exact_campos_preenchidos(self):
-        r = assemble_cap12(_exact(4))
+        r = assemble_cap11(_exact(4))
         assert isinstance(r.materializacao, MaterializacaoData)
         assert r.materializacao_b is None
 
     def test_exact_valores_id_4(self):
-        r = assemble_cap12(_exact(4))
+        r = assemble_cap11(_exact(4))
         m = r.materializacao
         assert m.cores == "Preto"
         assert m.metais == "Chumbo"
         assert m.animais.terra == "Urso"
 
     def test_hybrid_b_preenchido(self):
-        r = assemble_cap12(_hybrid(4, 9))
+        r = assemble_cap11(_hybrid(4, 9))
         assert isinstance(r.materializacao_b, MaterializacaoData)
         assert r.materializacao_b.cores == "Vermelho"
 
     def test_id_22_herda_4(self):
-        r22 = assemble_cap12(_exact(22))
-        r4 = assemble_cap12(_exact(4))
+        r22 = assemble_cap11(_exact(22))
+        r4 = assemble_cap11(_exact(4))
         assert r22.materializacao.cores == r4.materializacao.cores
 
     def test_master_label_em_materializacao(self):
-        r = assemble_cap12(_exact(33))
+        r = assemble_cap11(_exact(33))
         assert isinstance(r.materializacao.master_label, MasterLabel)

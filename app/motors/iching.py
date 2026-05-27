@@ -1,4 +1,4 @@
-"""Motor I Ching — lookup do hexagrama via Porta do Sol de Personalidade (Human Design)."""
+"""Motor I Ching — lookup do hexagrama pelo hexagrama do Sol natal (64 portas)."""
 
 from __future__ import annotations
 
@@ -11,6 +11,14 @@ from app.core.ids import lookup_id
 from app.core.temporal import TemporalStatus
 
 _FALLBACK_HEXAGRAMA = 1
+
+# Roda das 64 portas (I Ching / HD): índice 0–63, cada posição = 5,625° a partir de 0° Áries
+_RODA_GATES: list[int] = [
+    41, 19, 13, 49, 30, 55, 37, 63, 22, 36, 25, 17, 21, 51, 42,  3,
+    27, 24,  2, 23,  8, 20, 16, 35, 45, 12, 15, 52, 39, 53, 62, 56,
+    31, 33,  7,  4, 29, 59, 40, 64, 47,  6, 46, 18, 48, 57, 32, 50,
+    28, 44,  1, 43, 14, 34,  9,  5, 26, 11, 10, 58, 38, 54, 61, 60,
+]
 
 
 @lru_cache(maxsize=1)
@@ -25,37 +33,36 @@ def _hexagramas_table() -> dict[str, dict]:
 
 @dataclass(frozen=True)
 class IChingResult:
-    hexagrama: int       # número do hexagrama consultado (Porta do Sol de Personalidade)
-    nome: str            # nome do hexagrama
-    sentenca: str        # sentença oracular
-    id_gatilho: int      # ID arquetípico do hexagrama
-    vote: int            # lookup_id(id_gatilho) — contribuição para consolidação
-    fallback: bool       # True se hexagrama não estava na tabela e usou o fallback
+    hexagrama: int       # número do hexagrama (1–64)
+    nome: str
+    sentenca: str
+    id_gatilho: int
+    vote: int
+    fallback: bool
     overall_status: TemporalStatus
 
 
-def calculate_iching(porta_sol_personalidade: int) -> IChingResult:
+def calculate_iching(lon_sol: float) -> IChingResult:
     """
-    Faz lookup do hexagrama correspondente à Porta do Sol de Personalidade do HD.
+    Deriva o hexagrama I Ching a partir da longitude eclíptica do Sol natal.
 
-    A tabela cobre 12 hexagramas de referência. Para portais não mapeados,
-    aplica fallback para o hexagrama 1 (Resiliência Total — sistema nunca retorna erro).
+    Converte a longitude para uma das 64 portas usando a roda de portões,
+    depois faz lookup na tabela de hexagramas. Para hexagramas não mapeados,
+    aplica fallback para o hexagrama 1 (sistema nunca retorna erro).
 
     Args:
-        porta_sol_personalidade: inteiro 1–64 retornado pelo motor Human Design
-
-    Returns:
-        IChingResult com hexagrama, sentença, ID arquetípico e voto.
+        lon_sol: longitude eclíptica tropical do Sol (0–360°)
     """
+    hexagrama = _RODA_GATES[int(lon_sol / 5.625) % 64]
     table = _hexagramas_table()
-    key = str(porta_sol_personalidade)
+    key = str(hexagrama)
     fallback = key not in table
 
     entry = table[key if not fallback else str(_FALLBACK_HEXAGRAMA)]
     id_gatilho = entry["id_gatilho"]
 
     return IChingResult(
-        hexagrama=porta_sol_personalidade,
+        hexagrama=hexagrama,
         nome=entry["nome"],
         sentenca=entry["sentenca"],
         id_gatilho=id_gatilho,

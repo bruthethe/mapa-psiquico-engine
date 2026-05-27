@@ -13,3 +13,8 @@ def data_path() -> Path:
 def ephemeris_path() -> Path:
     """Caminho para os arquivos .se1 do Swiss Ephemeris."""
     return data_path() / "ephemeris"
+
+
+def frontend_url() -> str:
+    """URL base do frontend — usada pelo endpoint PDF para abrir /report/:id."""
+    return os.getenv("FRONTEND_URL", "http://localhost:3000")

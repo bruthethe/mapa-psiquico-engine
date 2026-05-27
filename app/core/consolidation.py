@@ -57,9 +57,9 @@ def consolidate(
     Consolida os votos dos 10 motores e elege o dominant archetype ID.
 
     Args:
-        votes_fase1:   6 votos dos motores temporais (ponto A ou hora exata)
+        votes_fase1:   5 votos dos motores temporais (ponto A ou hora exata)
         votes_fase2:   4 votos dos motores nominais
-        votes_fase1_b: 6 votos do ponto B — fornecido apenas em dual-check (Status 1/2)
+        votes_fase1_b: 5 votos do ponto B — fornecido apenas em dual-check (Status 1/2)
 
     Returns:
         ConsolidationResult com ID(s) eleito(s), status e label de mestre se aplicável.

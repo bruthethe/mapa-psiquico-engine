@@ -9,11 +9,11 @@ from fastapi import APIRouter, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from app.chapters.grupo_a import assemble_cap1, assemble_cap12, assemble_prefacio
+from app.chapters.grupo_a import assemble_cap1, assemble_cap11, assemble_prefacio
 from app.chapters.grupo_b import assemble_cap2, assemble_cap3, assemble_cap8
 from app.chapters.grupo_c import assemble_cap4, assemble_cap5, assemble_cap9
 from app.chapters.grupo_d import assemble_cap6, assemble_cap7
-from app.chapters.grupo_e import assemble_cap10, assemble_cap11
+from app.chapters.grupo_e import assemble_cap10
 from app.core.consolidation import consolidate
 from app.core.geocoding import GeocodingError, geocode
 from app.core.narrator import generate_narrative
@@ -24,9 +24,7 @@ from app.motors.cabalistica import calculate_cabalistica
 from app.motors.caldeia import calculate_caldeia
 from app.motors.daimon_hora import calculate_daimon_hora
 from app.motors.gematria import calculate_gematria
-from app.motors.human_design import calculate_hd
 from app.motors.iching import calculate_iching
-from app.motors.medicina import calculate_medicina
 from app.motors.pitagorica import calculate_pitagorica
 from app.motors.taro import calculate_taro
 from app.motors.temperamentos import calculate_temperamentos
@@ -124,7 +122,6 @@ async def test_submit(
         vedica      = calculate_vedica(birth_date, time_input, tz_name)
         bazi        = calculate_bazi(birth_date, time_input, tz_name)
         daimon_hora = calculate_daimon_hora(birth_date, time_input, tz_name, lat, lon)
-        hd          = calculate_hd(birth_date, time_input, tz_name)
         tzolkin     = calculate_tzolkin(birth_date)
 
         pitagorica  = calculate_pitagorica(nome_batismo, birth_date, nome_social_eff)
@@ -132,7 +129,7 @@ async def test_submit(
         caldeia     = calculate_caldeia(nome_batismo, birth_date)
         gematria    = calculate_gematria(nome_batismo)
 
-        votes_fase1 = [tropical.vote, vedica.vote, bazi.vote, daimon_hora.vote, hd.vote, tzolkin.vote]
+        votes_fase1 = [tropical.vote, vedica.vote, bazi.vote, daimon_hora.vote, tzolkin.vote]
         votes_fase2 = [pitagorica.vote, cabalistica.vote, caldeia.vote, gematria.vote]
 
         votes_fase1_b: list[int] | None = None
@@ -142,16 +139,14 @@ async def test_submit(
                 vedica.vote_b     if vedica.vote_b     is not None else vedica.vote,
                 bazi.vote,
                 daimon_hora.vote_b if daimon_hora.vote_b is not None else daimon_hora.vote,
-                hd.tipo_b_id_gatilho if hd.tipo_b_id_gatilho is not None else hd.vote,
                 tzolkin.vote,
             ]
 
         consolidation = consolidate(votes_fase1, votes_fase2, votes_fase1_b)
 
         alquimia = calculate_alquimia(tropical.sol.sign)
-        medicina = calculate_medicina(consolidation.id_dominante)
         taro     = calculate_taro(birth_date)
-        iching   = calculate_iching(hd.porta_sol_personalidade)
+        iching   = calculate_iching(tropical.sol.longitude or 0.0)
 
         posicoes_a: dict[str, str | None] = {}
         for p in [tropical.sol, tropical.lua, tropical.ascendente, *tropical.planets]:
@@ -177,9 +172,8 @@ async def test_submit(
         cap7  = assemble_cap7(taro, iching)
         cap8  = assemble_cap8(alquimia)
         cap9  = assemble_cap9(daimon_hora)
-        cap10 = assemble_cap10(hd, medicina)
+        cap10 = assemble_cap10(consolidation)
         cap11 = assemble_cap11(consolidation)
-        cap12 = assemble_cap12(consolidation)
 
         report_dict = {
             "consolidation": _to_json(consolidation),
@@ -196,7 +190,6 @@ async def test_submit(
                 "cap9":  _to_json(cap9),
                 "cap10": _to_json(cap10),
                 "cap11": _to_json(cap11),
-                "cap12": _to_json(cap12),
             },
             "debug": {
                 "votes_fase1":   votes_fase1,

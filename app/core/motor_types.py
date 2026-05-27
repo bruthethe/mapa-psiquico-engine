@@ -1,5 +1,5 @@
 """
-Result dataclasses for ephemeris-based motors (tropical, vedica, human_design).
+Result dataclasses for ephemeris-based motors (tropical, vedica).
 
 Kept in a separate module so chapter assemblers and tests can import
 the types without triggering the transitive swisseph dependency.
@@ -20,6 +20,7 @@ class PlanetResult:
     status: TemporalStatus
     sign_b: str | None = None
     id_gatilho_b: int | None = None
+    longitude: float | None = None  # grau eclíptico tropical 0–360°
 
 
 @dataclass
@@ -115,29 +116,3 @@ class DaimonHoraMotorResult:
     overall_status: TemporalStatus
 
 
-@dataclass(frozen=True)
-class HDActivation:
-    planeta: str
-    longitude: float
-    gate: int    # 1–64
-    linha: int   # 1–6
-
-
-@dataclass
-class HDResult:
-    personalidade: list[HDActivation]
-    design: list[HDActivation]
-    centros_definidos: frozenset[str]
-    canais_ativos: list[tuple[int, int]]
-    tipo: str
-    estrategia: str
-    tipo_id_gatilho: int
-    autoridade: str
-    autoridade_id_gatilho: int
-    porta_sol_personalidade: int   # Porta do Sol de Personalidade (1–64)
-    vote: int
-    overall_status: TemporalStatus
-    tipo_b: str | None = None
-    estrategia_b: str | None = None
-    tipo_b_id_gatilho: int | None = None
-    porta_sol_personalidade_b: int | None = None

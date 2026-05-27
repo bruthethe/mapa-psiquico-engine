@@ -78,6 +78,7 @@ def _planet_result(
         status=status,
         sign_b=sign_b if status == TemporalStatus.HYBRID else None,
         id_gatilho_b=id_b if status == TemporalStatus.HYBRID else None,
+        longitude=pos_a.longitude,
     )
 
 
@@ -105,6 +106,7 @@ def _ascendant_result(
         status=status,
         sign_b=sign_b if status == TemporalStatus.HYBRID else None,
         id_gatilho_b=id_b if status == TemporalStatus.HYBRID else None,
+        longitude=lon_a,
     )
 
 

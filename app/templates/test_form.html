@@ -224,18 +224,7 @@
     }
     .badge strong { color: var(--muted); margin-right: .35rem; font-size: .65rem; text-transform: uppercase; }
 
-    /* ── Cap 10: HD pills ───────────────────────────────────────── */
-    .hd-table { width: 100%; border-collapse: collapse; font-size: .875rem; margin-bottom: 1.25rem; }
-    .hd-table td { padding: .4rem 0; border-bottom: 1px solid var(--border); }
-    .hd-table td:first-child { font-family: monospace; font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); width: 40%; }
-    .hd-canais { display: flex; flex-wrap: wrap; gap: .4rem; }
-    .hd-canal {
-      font-family: monospace; font-size: .8rem;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 3px; padding: .15rem .5rem;
-    }
-
-    /* ── Cap 11: Panteões ───────────────────────────────────────── */
+    /* ── Cap 10: Panteões ───────────────────────────────────────── */
     .pantheon-card { padding: 1rem 1.1rem; }
     .pantheon-tradition {
       font-family: monospace; font-size: .65rem;
@@ -361,7 +350,6 @@
   {% set n89  = nc.get('cap8_9', {}) %}
   {% set n10  = nc.get('cap10', {}) %}
   {% set n11  = nc.get('cap11', {}) %}
-  {% set n12  = nc.get('cap12', {}) %}
 
   {# ── PREFÁCIO ── #}
   {% if narrative and narrative.get('prefacio') %}
@@ -672,69 +660,21 @@
     {% endif %}
   </div>
 
-  {# ── CAP 10: HUMAN DESIGN ── #}
+  {# ── CAP 10: PANTEÕES ── #}
   {% set c10 = capitulos.cap10 %}
+  {% set n10_divs = n10.get('texto', {}).get('divindades', {}) %}
   <div class="section">
     <div class="section-header">
       <span class="section-num">10</span>
-      <span class="section-title">Human Design</span>
-    </div>
-
-    <table class="hd-table">
-      <tr><td>Tipo</td><td>{{ c10.tipo }}</td></tr>
-      <tr><td>Estratégia</td><td>{{ c10.estrategia }}</td></tr>
-      <tr><td>Autoridade</td><td>{{ c10.autoridade }}</td></tr>
-      <tr><td>Chakra</td><td>{{ c10.chakra }}</td></tr>
-      <tr><td>Frequência</td><td>{{ c10.frequencia }}</td></tr>
-      <tr>
-        <td>Canais</td>
-        <td>
-          <div class="hd-canais">
-            {% for canal in c10.canais_ativos %}
-            <span class="hd-canal">{{ canal[0] }}–{{ canal[1] }}</span>
-            {% endfor %}
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>Centros</td>
-        <td>{{ c10.centros_definidos | join(', ') }}</td>
-      </tr>
-    </table>
-
-    {% if n10.get('texto') %}
-    <div class="narrative">
-      {% if n10.texto.get('design') %}
-      <div class="narrative-sub">
-        <div class="narrative-sub-label">Design</div>
-        <p>{{ n10.texto.design }}</p>
-      </div>
-      {% endif %}
-      {% if n10.texto.get('pratica') %}
-      <div class="narrative-sub">
-        <div class="narrative-sub-label">Na Prática</div>
-        <p>{{ n10.texto.pratica }}</p>
-      </div>
-      {% endif %}
-    </div>
-    {% endif %}
-  </div>
-
-  {# ── CAP 11: PANTEÕES ── #}
-  {% set c11 = capitulos.cap11 %}
-  {% set n11_divs = n11.get('texto', {}).get('divindades', {}) %}
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">11</span>
       <span class="section-title">Galeria dos Panteões</span>
     </div>
 
     <div class="grid-2-wide">
-      {% for p_key, deity_name in c11.panteoes.divindades.items() %}
+      {% for p_key, deity_name in c10.panteoes.divindades.items() %}
       <div class="card pantheon-card">
         <div class="pantheon-tradition">{{ panteao_names.get(p_key, p_key) }}</div>
         <div class="pantheon-deity">{{ deity_name }}</div>
-        {% set p_text = n11_divs.get(p_key, '') %}
+        {% set p_text = n10_divs.get(p_key, '') %}
         {% if p_text %}
         <div class="pantheon-text">{{ p_text }}</div>
         {% endif %}
@@ -743,12 +683,12 @@
     </div>
   </div>
 
-  {# ── CAP 12: MATERIALIZAÇÃO ── #}
-  {% set c12 = capitulos.cap12 %}
-  {% set mat = c12.materializacao %}
+  {# ── CAP 11: MATERIALIZAÇÃO ── #}
+  {% set c11 = capitulos.cap11 %}
+  {% set mat = c11.materializacao %}
   <div class="section">
     <div class="section-header">
-      <span class="section-num">12</span>
+      <span class="section-num">11</span>
       <span class="section-title">Materialização Sensorial</span>
     </div>
 
@@ -789,8 +729,8 @@
       </div>
     </div>
 
-    {% if n12.get('texto', {}).get('principal') %}
-    <div class="narrative"><p>{{ n12.texto.principal }}</p></div>
+    {% if n11.get('texto', {}).get('principal') %}
+    <div class="narrative"><p>{{ n11.texto.principal }}</p></div>
     {% endif %}
   </div>
 
